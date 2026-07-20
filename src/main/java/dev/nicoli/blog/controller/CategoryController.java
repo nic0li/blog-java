@@ -27,10 +27,7 @@ public class CategoryController {
     @GetMapping
     public ResponseEntity<List<CategoryResponse>> findAll(
             @RequestParam(required = false) String name) {
-        if (name == null || name.isBlank()) {
-            return ResponseEntity.ok(service.findAll());
-        }
-        return ResponseEntity.ok(service.findByName(name));
+        return ResponseEntity.ok(service.findAll(name));
     }
 
     @GetMapping("/{id}")

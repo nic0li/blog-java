@@ -56,23 +56,22 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserResponse> findById() {
+    public ResponseEntity<UserResponse> findMe() {
         return ResponseEntity.ok(service.findMe());
     }
 
     @PatchMapping("/me")
-    public ResponseEntity<UserResponse> update(
+    public ResponseEntity<UserResponse> updateMe(
             @RequestBody UserUpdateRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(service.updateMe(request));
     }
 
     @DeleteMapping("/me")
-    public ResponseEntity<Void> delete() {
+    public ResponseEntity<Void> deleteMe() {
         service.deleteMe();
         return ResponseEntity.noContent().build();
     }
-
 
     @GetMapping("/{id}/posts")
     public ResponseEntity<UserPostsResponse> findPostsByUser(

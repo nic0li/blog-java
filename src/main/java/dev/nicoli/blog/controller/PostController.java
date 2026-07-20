@@ -26,11 +26,8 @@ public class PostController {
 
     @GetMapping
     public ResponseEntity<List<PostViewResponse>> findAll(
-            @ModelAttribute
-            @ParameterObject
-            PostFiltersRequest request) {
-
-        return ResponseEntity.ok(service.findAll(request));
+            @ModelAttribute @ParameterObject PostFiltersRequest filters) {
+        return ResponseEntity.ok(service.findAll(filters));
     }
 
     @GetMapping("/{id}")

@@ -62,9 +62,16 @@ public class CategoryService extends AbstractCrudService<Category,
         return CategoryMapper.toResponse(repository.save(category));
     }
 
-    public List<CategoryResponse> findByName(String name) {
-        return repository.findAllByNameContainingIgnoreCase(name).stream()
+    public List<CategoryResponse> findAll(String name) {
+        return findCategories(name).stream()
                 .map(CategoryMapper::toResponse).toList();
+    }
+
+    private List<Category> findCategories(String name) {
+        if (name != null && !name.isBlank()) {
+            return repository.findAllByNameContainingIgnoreCase(name);
+        }
+        return repository.findAll();
     }
 
     private void validateUniqueName(String name, Long currentCategoryId) {
