@@ -40,7 +40,7 @@ public class CommentService extends AbstractCrudService<Comment,
 
     @Override
     public Function<Comment, CommentViewResponse> mapperResponse() {
-        return CommentMapper::toResponse;
+        return CommentMapper::toViewResponse;
     }
 
     @Override
@@ -53,7 +53,7 @@ public class CommentService extends AbstractCrudService<Comment,
         Comment comment = CommentMapper.createEntity(request);
         comment.setPost(postService.getById(request.postId()));
         comment.setUser(authorizationService.currentUser());
-        return CommentMapper.toEditResponse(repository.save(comment));
+        return CommentMapper.toResponse(repository.save(comment));
     }
 
     @Override
@@ -61,7 +61,7 @@ public class CommentService extends AbstractCrudService<Comment,
         Comment comment = getById(id);
         authorizationService.validateOwner(comment.getUser());
         CommentMapper.updateEntity(comment, request);
-        return CommentMapper.toEditResponse(repository.save(comment));
+        return CommentMapper.toResponse(repository.save(comment));
     }
 
 }

@@ -31,14 +31,15 @@ public abstract class UserMapper {
         }
     }
 
-    public static UserResponse toEditResponse(User user) {
+    public static UserResponse toResponse(User user) {
         return new UserResponse(user.getId(),
                 user.getName(),
                 user.getEmail(),
-                user.getPhoto());
+                user.getPhoto(),
+                user.getRole());
     }
 
-    public static UserViewResponse toResponse(User user) {
+    public static UserViewResponse toViewResponse(User user) {
         return new UserViewResponse(user.getId(),
                 user.getName(),
                 user.getPhoto());

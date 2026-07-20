@@ -44,7 +44,7 @@ public class PostService extends AbstractCrudService<Post,
 
     @Override
     public Function<Post, PostViewResponse> mapperResponse() {
-        return PostMapper::toResponse;
+        return PostMapper::toViewResponse;
     }
 
     @Override
@@ -57,7 +57,7 @@ public class PostService extends AbstractCrudService<Post,
         Post post = PostMapper.createEntity(request);
         post.setCategory(categoryService.getById(request.categoryId()));
         post.setUser(authorizationService.currentUser());
-        return PostMapper.toEditResponse(repository.save(post));
+        return PostMapper.toResponse(repository.save(post));
     }
 
     @Override
@@ -68,13 +68,13 @@ public class PostService extends AbstractCrudService<Post,
         if (request.categoryId() != null) {
             post.setCategory(categoryService.getById(request.categoryId()));
         }
-        return PostMapper.toEditResponse(repository.save(post));
+        return PostMapper.toResponse(repository.save(post));
     }
 
     @Transactional(readOnly = true)
     public List<PostViewResponse> findAll(PostFiltersRequest request) {
         return findPosts(request).stream()
-                .map(PostMapper::toResponse).toList();
+                .map(PostMapper::toViewResponse).toList();
     }
 
     @Transactional(readOnly = true)
@@ -84,7 +84,7 @@ public class PostService extends AbstractCrudService<Post,
                 repository.findAllByUserId(id).stream()
                         .map(PostMapper::toUserPostResponse).toList();
         return new UserPostsResponse(
-                UserMapper.toResponse(user), userPosts);
+                UserMapper.toViewResponse(user), userPosts);
     }
 
     @Transactional(readOnly = true)
@@ -94,7 +94,7 @@ public class PostService extends AbstractCrudService<Post,
                 repository.findAllByUserId(user.getId()).stream()
                         .map(PostMapper::toUserPostResponse).toList();
         return new UserPostsResponse(
-                UserMapper.toResponse(user), userPosts);
+                UserMapper.toViewResponse(user), userPosts);
     }
 
     private List<Post> findPosts(PostFiltersRequest request) {

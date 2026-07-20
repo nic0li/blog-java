@@ -45,7 +45,7 @@ public class AuthService {
 
         String token = jwtService.generateToken(user.getId());
 
-        return new LoginResponse(UserMapper.toEditResponse(user), token);
+        return new LoginResponse(UserMapper.toResponse(user), token);
     }
 
     protected User getAuthenticatedUser() {

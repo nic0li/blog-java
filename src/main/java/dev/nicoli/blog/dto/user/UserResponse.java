@@ -1,5 +1,7 @@
 package dev.nicoli.blog.dto.user;
 
+import dev.nicoli.blog.common.enums.UserRole;
+
 public record UserResponse(
 
         Long id,
@@ -8,7 +10,9 @@ public record UserResponse(
 
         String email,
 
-        String photo
+        String photo,
+
+        UserRole role
 
 ) {
 }

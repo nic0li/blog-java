@@ -23,23 +23,23 @@ public abstract class PostMapper {
         }
     }
 
-    public static PostResponse toEditResponse(Post post) {
+    public static PostResponse toResponse(Post post) {
         return new PostResponse(post.getId(),
                 post.getTitle(),
                 post.getContent(),
                 CategoryMapper.toResponse(post.getCategory()),
-                UserMapper.toEditResponse(post.getUser()),
+                UserMapper.toResponse(post.getUser()),
                 post.getCreatedAt(),
                 post.getUpdatedAt());
     }
 
-    public static PostViewResponse toResponse(Post post) {
+    public static PostViewResponse toViewResponse(Post post) {
         return new PostViewResponse(post.getId(),
                 post.getTitle(),
                 post.getContent(),
                 CategoryMapper.toResponse(post.getCategory()),
-                UserMapper.toResponse(post.getUser()),
-                CommentMapper.toResponse(post.getComments()),
+                UserMapper.toViewResponse(post.getUser()),
+                CommentMapper.toViewResponse(post.getComments()),
                 post.getCreatedAt(),
                 post.getUpdatedAt());
     }
@@ -49,7 +49,7 @@ public abstract class PostMapper {
                 post.getTitle(),
                 post.getContent(),
                 CategoryMapper.toResponse(post.getCategory()),
-                CommentMapper.toResponse(post.getComments()),
+                CommentMapper.toViewResponse(post.getComments()),
                 post.getCreatedAt(),
                 post.getUpdatedAt());
     }

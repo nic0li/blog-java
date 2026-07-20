@@ -44,7 +44,7 @@ public class UserService extends AbstractCrudService<User,
 
     @Override
     public Function<User, UserViewResponse> mapperResponse() {
-        return UserMapper::toResponse;
+        return UserMapper::toViewResponse;
     }
 
     @Override
@@ -58,7 +58,7 @@ public class UserService extends AbstractCrudService<User,
         User user = UserMapper.createEntity(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(UserRole.USER);
-        return UserMapper.toEditResponse(repository.save(user));
+        return UserMapper.toResponse(repository.save(user));
     }
 
     @Override
@@ -67,13 +67,13 @@ public class UserService extends AbstractCrudService<User,
         authorizationService.validateOwner(user);
         validateUniqueEmail(request.email(), user.getId());
         UserMapper.updateEntity(user, request);
-        return UserMapper.toEditResponse(repository.save(user));
+        return UserMapper.toResponse(repository.save(user));
     }
 
     public UserResponse findMe() {
         User user = getById(
                 authorizationService.currentUser().getId());
-        return UserMapper.toEditResponse(user);
+        return UserMapper.toResponse(user);
     }
 
     public UserResponse updateMe(UserUpdateRequest request) {
@@ -81,7 +81,7 @@ public class UserService extends AbstractCrudService<User,
                 authorizationService.currentUser().getId());
         validateUniqueEmail(request.email(), user.getId());
         UserMapper.updateEntity(user, request);
-        return UserMapper.toEditResponse(repository.save(user));
+        return UserMapper.toResponse(repository.save(user));
     }
 
     public void deleteMe() {

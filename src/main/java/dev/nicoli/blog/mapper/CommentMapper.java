@@ -24,25 +24,25 @@ public abstract class CommentMapper {
         }
     }
 
-    public static CommentResponse toEditResponse(Comment comment) {
+    public static CommentResponse toResponse(Comment comment) {
         return new CommentResponse(comment.getId(),
-                comment.getContent(),
-                UserMapper.toEditResponse(comment.getUser()),
-                comment.getCreatedAt(),
-                comment.getUpdatedAt());
-    }
-
-    public static CommentViewResponse toResponse(Comment comment) {
-        return new CommentViewResponse(comment.getId(),
                 comment.getContent(),
                 UserMapper.toResponse(comment.getUser()),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt());
     }
 
-    public static List<CommentViewResponse> toResponse(List<Comment> comments) {
+    public static CommentViewResponse toViewResponse(Comment comment) {
+        return new CommentViewResponse(comment.getId(),
+                comment.getContent(),
+                UserMapper.toViewResponse(comment.getUser()),
+                comment.getCreatedAt(),
+                comment.getUpdatedAt());
+    }
+
+    public static List<CommentViewResponse> toViewResponse(List<Comment> comments) {
         return comments.stream()
-                .map(CommentMapper::toResponse)
+                .map(CommentMapper::toViewResponse)
                 .toList();
     }
 
