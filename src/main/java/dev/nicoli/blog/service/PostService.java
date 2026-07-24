@@ -4,7 +4,6 @@ import dev.nicoli.blog.common.service.AbstractCrudService;
 import dev.nicoli.blog.dto.post.*;
 import dev.nicoli.blog.entity.Post;
 import dev.nicoli.blog.mapper.PostMapper;
-import dev.nicoli.blog.mapper.UserMapper;
 import dev.nicoli.blog.repository.PostRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,16 +24,12 @@ public class PostService extends AbstractCrudService<Post,
 
     private final CategoryService categoryService;
 
-    private final UserService userService;
-
     public PostService(PostRepository repository,
                        AuthorizationService authorizationService,
-                       CategoryService categoryService,
-                       UserService userService) {
+                       CategoryService categoryService) {
         this.repository = repository;
         this.authorizationService = authorizationService;
         this.categoryService = categoryService;
-        this.userService = userService;
     }
 
     @Override
@@ -78,23 +73,16 @@ public class PostService extends AbstractCrudService<Post,
     }
 
     @Transactional(readOnly = true)
-    public UserPostsResponse findByUser(Long id) {
-        var user = userService.getById(id);
-        List<UserPostResponse> userPosts =
-                repository.findAllByUserId(id).stream()
-                        .map(PostMapper::toUserPostResponse).toList();
-        return new UserPostsResponse(
-                UserMapper.toViewResponse(user), userPosts);
+    public List<PostViewResponse> findByUser(Long id) {
+        return repository.findAllByUserId(id).stream()
+                .map(PostMapper::toViewResponse).toList();
     }
 
     @Transactional(readOnly = true)
-    public UserPostsResponse findAuthenticatedUserPosts() {
+    public List<PostViewResponse> findByAuthenticatedUser() {
         var user = authorizationService.currentUser();
-        List<UserPostResponse> userPosts =
-                repository.findAllByUserId(user.getId()).stream()
-                        .map(PostMapper::toUserPostResponse).toList();
-        return new UserPostsResponse(
-                UserMapper.toViewResponse(user), userPosts);
+        return repository.findAllByUserId(user.getId()).stream()
+                .map(PostMapper::toViewResponse).toList();
     }
 
     private List<Post> findPosts(PostFiltersRequest request) {

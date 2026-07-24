@@ -1,6 +1,6 @@
 package dev.nicoli.blog.controller;
 
-import dev.nicoli.blog.dto.post.UserPostsResponse;
+import dev.nicoli.blog.dto.post.PostViewResponse;
 import dev.nicoli.blog.dto.user.UserResponse;
 import dev.nicoli.blog.dto.user.UserUpdateRequest;
 import dev.nicoli.blog.dto.user.UserViewResponse;
@@ -74,16 +74,16 @@ public class UserController {
     }
 
     @GetMapping("/{id}/posts")
-    public ResponseEntity<UserPostsResponse> findPostsByUser(
+    public ResponseEntity<List<PostViewResponse>> findPostsByUser(
             @PathVariable Long id) {
         return ResponseEntity.ok(
                 postService.findByUser(id));
     }
 
     @GetMapping("/me/posts")
-    public ResponseEntity<UserPostsResponse> findAuthenticatedUserPosts() {
+    public ResponseEntity<List<PostViewResponse>> findAuthenticatedUserPosts() {
         return ResponseEntity.ok(
-                postService.findAuthenticatedUserPosts());
+                postService.findByAuthenticatedUser());
     }
 
 }

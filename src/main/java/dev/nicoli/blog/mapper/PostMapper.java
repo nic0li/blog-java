@@ -44,14 +44,4 @@ public abstract class PostMapper {
                 post.getUpdatedAt());
     }
 
-    public static UserPostResponse toUserPostResponse(Post post) {
-        return new UserPostResponse(post.getId(),
-                post.getTitle(),
-                post.getContent(),
-                CategoryMapper.toResponse(post.getCategory()),
-                CommentMapper.toViewResponse(post.getComments()),
-                post.getCreatedAt(),
-                post.getUpdatedAt());
-    }
-
 }
