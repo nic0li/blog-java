@@ -33,17 +33,17 @@ public class PostService extends AbstractCrudService<Post,
     }
 
     @Override
-    public PostRepository repository() {
+    protected PostRepository repository() {
         return repository;
     }
 
     @Override
-    public Function<Post, PostViewResponse> mapperResponse() {
+    protected Function<Post, PostViewResponse> mapperResponse() {
         return PostMapper::toViewResponse;
     }
 
     @Override
-    public void validateDeleteAuthorization(Post post) {
+    protected void validateDeleteAuthorization(Post post) {
         authorizationService.validateOwnerOrAdmin(post.getUser());
     }
 

@@ -12,8 +12,10 @@ import dev.nicoli.blog.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.function.Function;
 
 @Service
@@ -38,17 +40,17 @@ public class UserService extends AbstractCrudService<User,
     }
 
     @Override
-    public UserRepository repository() {
+    protected UserRepository repository() {
         return repository;
     }
 
     @Override
-    public Function<User, UserViewResponse> mapperResponse() {
+    protected Function<User, UserViewResponse> mapperResponse() {
         return UserMapper::toViewResponse;
     }
 
     @Override
-    public void validateDeleteAuthorization(User user) {
+    protected void validateDeleteAuthorization(User user) {
         authorizationService.validateOwnerOrAdmin(user);
     }
 
@@ -68,6 +70,14 @@ public class UserService extends AbstractCrudService<User,
         validateUniqueEmail(request.email(), user.getId());
         UserMapper.updateEntity(user, request);
         return UserMapper.toResponse(repository.save(user));
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserViewResponse> findAll() {
+        return repository().findAll()
+                .stream()
+                .map(mapperResponse())
+                .toList();
     }
 
     public UserResponse findMe() {

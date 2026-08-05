@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.lang.reflect.ParameterizedType;
-import java.util.List;
 import java.util.function.Function;
 
 public abstract class AbstractCrudService<Entity,
@@ -42,15 +41,6 @@ public abstract class AbstractCrudService<Entity,
 
     public Entity getById(Long id) {
         return findEntityById(id);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<ViewResponse> findAll() {
-        return repository().findAll()
-                .stream()
-                .map(mapperResponse())
-                .toList();
     }
 
     @Override

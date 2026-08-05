@@ -1,10 +1,10 @@
 package dev.nicoli.blog.controller;
 
-import dev.nicoli.blog.dto.auth.LoginRequest;
-import dev.nicoli.blog.dto.auth.LoginResponse;
+import dev.nicoli.blog.dto.authentication.LoginRequest;
+import dev.nicoli.blog.dto.authentication.LoginResponse;
 import dev.nicoli.blog.dto.user.UserCreateRequest;
 import dev.nicoli.blog.dto.user.UserResponse;
-import dev.nicoli.blog.service.AuthService;
+import dev.nicoli.blog.service.AuthenticationService;
 import dev.nicoli.blog.service.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,15 +16,15 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 @SecurityRequirement(name = "bearerAuth")
-@Tag(name = "Auth")
-public class AuthController {
+@Tag(name = "Authentication")
+public class AuthenticationController {
 
-    private final AuthService service;
+    private final AuthenticationService service;
 
     private final UserService userService;
 
-    public AuthController(AuthService service,
-                          UserService userService) {
+    public AuthenticationController(AuthenticationService service,
+                                    UserService userService) {
         this.service = service;
         this.userService = userService;
     }

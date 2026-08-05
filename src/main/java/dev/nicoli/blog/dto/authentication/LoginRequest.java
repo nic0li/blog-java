@@ -1,4 +1,4 @@
-package dev.nicoli.blog.dto.auth;
+package dev.nicoli.blog.dto.authentication;
 
 public record LoginRequest(
 

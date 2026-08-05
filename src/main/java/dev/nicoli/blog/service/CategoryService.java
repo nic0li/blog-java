@@ -31,17 +31,17 @@ public class CategoryService extends AbstractCrudService<Category,
     }
 
     @Override
-    public CategoryRepository repository() {
+    protected CategoryRepository repository() {
         return repository;
     }
 
     @Override
-    public Function<Category, CategoryResponse> mapperResponse() {
+    protected Function<Category, CategoryResponse> mapperResponse() {
         return CategoryMapper::toResponse;
     }
 
     @Override
-    public void validateDeleteAuthorization(Category category) {
+    protected void validateDeleteAuthorization(Category category) {
         authorizationService.validateAdmin();
     }
 
@@ -68,10 +68,10 @@ public class CategoryService extends AbstractCrudService<Category,
     }
 
     private List<Category> findCategories(String name) {
-        if (name != null && !name.isBlank()) {
-            return repository.findAllByNameContainingIgnoreCase(name);
+        if (name == null || name.isBlank()) {
+            return repository.findAll();
         }
-        return repository.findAll();
+        return repository.findAllByNameContainingIgnoreCase(name);
     }
 
     private void validateUniqueName(String name, Long currentCategoryId) {

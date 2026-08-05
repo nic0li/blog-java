@@ -9,7 +9,9 @@ import dev.nicoli.blog.entity.Comment;
 import dev.nicoli.blog.mapper.CommentMapper;
 import dev.nicoli.blog.repository.CommentRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.function.Function;
 
 @Service
@@ -34,17 +36,17 @@ public class CommentService extends AbstractCrudService<Comment,
     }
 
     @Override
-    public CommentRepository repository() {
+    protected CommentRepository repository() {
         return repository;
     }
 
     @Override
-    public Function<Comment, CommentViewResponse> mapperResponse() {
+    protected Function<Comment, CommentViewResponse> mapperResponse() {
         return CommentMapper::toViewResponse;
     }
 
     @Override
-    public void validateDeleteAuthorization(Comment comment) {
+    protected void validateDeleteAuthorization(Comment comment) {
         authorizationService.validateOwnerOrAdmin(comment.getUser());
     }
 
@@ -62,6 +64,14 @@ public class CommentService extends AbstractCrudService<Comment,
         authorizationService.validateOwner(comment.getUser());
         CommentMapper.updateEntity(comment, request);
         return CommentMapper.toResponse(repository.save(comment));
+    }
+
+    @Transactional(readOnly = true)
+    public List<CommentViewResponse> findAll() {
+        return repository().findAll()
+                .stream()
+                .map(mapperResponse())
+                .toList();
     }
 
 }

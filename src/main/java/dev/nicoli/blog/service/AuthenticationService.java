@@ -1,7 +1,7 @@
 package dev.nicoli.blog.service;
 
-import dev.nicoli.blog.dto.auth.LoginRequest;
-import dev.nicoli.blog.dto.auth.LoginResponse;
+import dev.nicoli.blog.dto.authentication.LoginRequest;
+import dev.nicoli.blog.dto.authentication.LoginResponse;
 import dev.nicoli.blog.entity.User;
 import dev.nicoli.blog.mapper.UserMapper;
 import dev.nicoli.blog.repository.UserRepository;
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
-public class AuthService {
+public class AuthenticationService {
 
     private final UserRepository repository;
 
@@ -24,9 +24,9 @@ public class AuthService {
     
     private final AuthenticationManager authenticationManager;
 
-    public AuthService(UserRepository repository,
-                       JwtService jwtService,
-                       AuthenticationManager authenticationManager) {
+    public AuthenticationService(UserRepository repository,
+                                 JwtService jwtService,
+                                 AuthenticationManager authenticationManager) {
         this.repository = repository;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;

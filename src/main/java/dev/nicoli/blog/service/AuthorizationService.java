@@ -9,26 +9,26 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class AuthorizationService {
 
-    private final AuthService authService;
+    private final AuthenticationService authenticationService;
 
-    public AuthorizationService(AuthService authService) {
-        this.authService = authService;
+    public AuthorizationService(AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
     }
 
     public User currentUser() {
-        return authService.getAuthenticatedUser();
+        return authenticationService.getAuthenticatedUser();
     }
 
-    public boolean isOwner(User user) {
-        return user.getId().equals(currentUser().getId());
+    public boolean isNotOwner(User user) {
+        return !user.getId().equals(currentUser().getId());
     }
 
-    public boolean isAdmin() {
-        return currentUser().getRole() == UserRole.ADMIN;
+    public boolean isNotAdmin() {
+        return currentUser().getRole() != UserRole.ADMIN;
     }
 
     public void validateOwner(User user) {
-        if (!isOwner(user)) {
+        if (isNotOwner(user)) {
             throw new ResponseStatusException(
                     HttpStatus.FORBIDDEN,
                     "You are not allowed to modify this resource");
@@ -36,7 +36,7 @@ public class AuthorizationService {
     }
 
     public void validateAdmin() {
-        if (!isAdmin()) {
+        if (isNotAdmin()) {
             throw new ResponseStatusException(
                     HttpStatus.FORBIDDEN,
                     "Administrator privileges required");
@@ -44,7 +44,7 @@ public class AuthorizationService {
     }
 
     public void validateOwnerOrAdmin(User user) {
-        if (!isOwner(user) && !isAdmin()) {
+        if (isNotOwner(user) && isNotAdmin()) {
             throw new ResponseStatusException(
                     HttpStatus.FORBIDDEN,
                     "You are not allowed to modify this resource");
