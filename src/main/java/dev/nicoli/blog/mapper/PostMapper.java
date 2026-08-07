@@ -3,18 +3,18 @@ package dev.nicoli.blog.mapper;
 import dev.nicoli.blog.dto.post.*;
 import dev.nicoli.blog.entity.Post;
 
-public abstract class PostMapper {
+public final class PostMapper {
 
-    public static Post createEntity(
-            PostCreateRequest request) {
+    private PostMapper() { }
+
+    public static Post createEntity(PostCreateRequest request) {
         Post post = new Post();
         post.setTitle(request.title());
         post.setContent(request.content());
         return post;
     }
 
-    public static void updateEntity(Post post,
-                                    PostUpdateRequest request) {
+    public static void updateEntity(Post post, PostUpdateRequest request) {
         if (request.title() != null) {
             post.setTitle(request.title());
         }

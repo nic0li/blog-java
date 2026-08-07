@@ -33,15 +33,13 @@ public class AuthenticationService {
     }
 
     public LoginResponse authenticate(LoginRequest request) {
-        Authentication credentials =
-                new UsernamePasswordAuthenticationToken(
-                        request.login(),
-                        request.password());
-        authenticationManager.authenticate(credentials);
+        Authentication authentication =
+                authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                request.login(),
+                                request.password()));
 
-        User user = repository.findByEmail(request.login())
-                .orElseThrow(() ->
-                        new ResponseStatusException(HttpStatus.UNAUTHORIZED));
+        User user = ((UserDetailsImpl) authentication.getPrincipal()).user();
 
         String token = jwtService.generateToken(user.getId());
 
@@ -49,15 +47,28 @@ public class AuthenticationService {
     }
 
     protected User getAuthenticatedUser() {
-        UserDetailsImpl principal =
-                (UserDetailsImpl) SecurityContextHolder.getContext()
-                        .getAuthentication().getPrincipal();
+        UserDetailsImpl principal = getAuthenticatedPrincipal();
 
         return repository.findById(principal.user().getId())
-                .orElseThrow(() ->
-                        new ResponseStatusException(
-                                HttpStatus.UNAUTHORIZED,
-                                "User not authenticated"));
+                .orElseThrow(this::unauthenticatedException);
+    }
+
+    private UserDetailsImpl getAuthenticatedPrincipal() {
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        if (!(authentication != null
+                && authentication.getPrincipal() instanceof UserDetailsImpl principal)) {
+            throw unauthenticatedException();
+        }
+
+        return principal;
+    }
+
+    private ResponseStatusException unauthenticatedException() {
+        return new ResponseStatusException(
+                HttpStatus.UNAUTHORIZED,
+                "User not authenticated");
     }
 
 }

@@ -4,12 +4,14 @@ import jakarta.validation.constraints.Email;
 
 public record UserUpdateRequest(
 
-        @Email(message = "E-mail inválido")
+        @Email(message = "Invalid email")
         String email,
 
         String name,
 
-        String photo
+        String photo,
+
+        String bio
 
 ) {
 }

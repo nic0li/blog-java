@@ -4,7 +4,9 @@ import dev.nicoli.blog.dto.category.CategoryRequest;
 import dev.nicoli.blog.dto.category.CategoryResponse;
 import dev.nicoli.blog.entity.Category;
 
-public abstract class CategoryMapper {
+public final class CategoryMapper {
+
+    private CategoryMapper() { }
 
     public static Category toEntity(CategoryRequest request) {
         Category category = new Category();

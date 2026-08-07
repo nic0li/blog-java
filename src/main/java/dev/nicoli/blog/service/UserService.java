@@ -81,22 +81,19 @@ public class UserService extends AbstractCrudService<User,
     }
 
     public UserResponse findMe() {
-        User user = getById(
-                authorizationService.currentUser().getId());
+        User user = authorizationService.currentUser();
         return UserMapper.toResponse(user);
     }
 
     public UserResponse updateMe(UserUpdateRequest request) {
-        User user = getById(
-                authorizationService.currentUser().getId());
+        User user = authorizationService.currentUser();
         validateUniqueEmail(request.email(), user.getId());
         UserMapper.updateEntity(user, request);
         return UserMapper.toResponse(repository.save(user));
     }
 
     public void deleteMe() {
-        User user = getById(
-                authorizationService.currentUser().getId());
+        User user = authorizationService.currentUser();
         repository.delete(user);
     }
 

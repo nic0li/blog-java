@@ -6,7 +6,9 @@ public record UserViewResponse(
 
         String name,
 
-        String photo
+        String photo,
+
+        String bio
 
 ) {
 }

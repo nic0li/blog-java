@@ -6,11 +6,13 @@ public record UserResponse(
 
         Long id,
 
-        String name,
-
         String email,
 
+        String name,
+
         String photo,
+
+        String bio,
 
         UserRole role
 

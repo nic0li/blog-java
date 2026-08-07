@@ -6,17 +6,15 @@ import jakarta.validation.constraints.Size;
 
 public record UserCreateRequest(
 
-        @NotBlank(message = "O e-mail é obrigatório")
-        @Email(message = "E-mail inválido")
+        @NotBlank(message = "Email is required")
+        @Email(message = "Invalid email")
         String email,
 
-        @NotBlank(message = "A password é obrigatória")
-        @Size(min = 3, message = "A password deve ter no mínimo 3 caracteres")
+        @NotBlank(message = "Password is required")
+        @Size(min = 3, message = "Password must be at least 3 characters long")
         String password,
 
-        String name,
-
-        String photo
+        String name
 
 ) {
 }
