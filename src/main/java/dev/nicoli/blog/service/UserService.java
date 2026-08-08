@@ -56,7 +56,7 @@ public class UserService extends AbstractCrudService<User,
 
     @Override
     public UserResponse create(UserCreateRequest request) {
-        validateUniqueEmail(request.email(), null);
+        validateEmailAvailability(request.email(), null);
         User user = UserMapper.createEntity(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRole(UserRole.USER);
@@ -67,7 +67,7 @@ public class UserService extends AbstractCrudService<User,
     public UserResponse update(Long id, UserUpdateRequest request) {
         User user = getById(id);
         authorizationService.validateOwner(user);
-        validateUniqueEmail(request.email(), user.getId());
+        validateEmailAvailability(request.email(), user.getId());
         UserMapper.updateEntity(user, request);
         return UserMapper.toResponse(repository.save(user));
     }
@@ -81,29 +81,35 @@ public class UserService extends AbstractCrudService<User,
     }
 
     public UserResponse findMe() {
-        User user = authorizationService.currentUser();
+        User user = authorizationService.getAuthenticatedUser();
         return UserMapper.toResponse(user);
     }
 
     public UserResponse updateMe(UserUpdateRequest request) {
-        User user = authorizationService.currentUser();
-        validateUniqueEmail(request.email(), user.getId());
+        User user = authorizationService.getAuthenticatedUser();
+        validateEmailAvailability(request.email(), user.getId());
         UserMapper.updateEntity(user, request);
         return UserMapper.toResponse(repository.save(user));
     }
 
     public void deleteMe() {
-        User user = authorizationService.currentUser();
+        User user = authorizationService.getAuthenticatedUser();
         repository.delete(user);
     }
 
-    private void validateUniqueEmail(String email, Long currentUserId) {
-        var user = repository.findByEmail(email);
-        if (user.isPresent()
-                && (currentUserId == null
-                || !user.get().getId().equals(currentUserId))) {
+    private void validateEmailAvailability(String email, Long userId) {
+        if (email == null) {
+            return;
+        }
+        var userByEmail = repository.findByEmail(email);
+        boolean emailAlreadyExists = userByEmail.isPresent();
+        boolean emailBelongsToAnotherUser = emailAlreadyExists
+                        && !userByEmail.get().getId().equals(userId);
+
+        if (emailAlreadyExists && emailBelongsToAnotherUser) {
             throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST, "Email already registered");
+                    HttpStatus.BAD_REQUEST,
+                    "Email already registered");
         }
     }
 

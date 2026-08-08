@@ -58,7 +58,7 @@ public class CategoryService extends AbstractCrudService<Category,
         authorizationService.validateAdmin();
         Category category = getById(id);
         validateUniqueName(request.name(), id);
-        category.setName(request.name());
+        CategoryMapper.updateEntity(category, request);
         return CategoryMapper.toResponse(repository.save(category));
     }
 
@@ -74,11 +74,16 @@ public class CategoryService extends AbstractCrudService<Category,
         return repository.findAllByNameContainingIgnoreCase(name);
     }
 
-    private void validateUniqueName(String name, Long currentCategoryId) {
-        var category = repository.findByNameIgnoreCase(name);
-        if (category.isPresent()
-                && (currentCategoryId == null
-                || !category.get().getId().equals(currentCategoryId))) {
+    private void validateUniqueName(String name, Long categoryId) {
+        if (name == null) {
+            return;
+        }
+        var categoryByName = repository.findByNameIgnoreCase(name);
+        boolean categoryAlreadyExists = categoryByName.isPresent();
+        boolean isDifferent = categoryAlreadyExists
+                && !categoryByName.get().getId().equals(categoryId);
+
+        if (categoryAlreadyExists && isDifferent) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST, "Category already exists");
         }

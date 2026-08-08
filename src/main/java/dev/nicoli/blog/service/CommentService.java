@@ -54,7 +54,7 @@ public class CommentService extends AbstractCrudService<Comment,
     public CommentResponse create(CommentCreateRequest request) {
         Comment comment = CommentMapper.createEntity(request);
         comment.setPost(postService.getById(request.postId()));
-        comment.setUser(authorizationService.currentUser());
+        comment.setUser(authorizationService.getAuthenticatedUser());
         return CommentMapper.toResponse(repository.save(comment));
     }
 

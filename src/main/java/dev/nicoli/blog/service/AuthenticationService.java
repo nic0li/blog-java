@@ -57,12 +57,11 @@ public class AuthenticationService {
         Authentication authentication =
                 SecurityContextHolder.getContext().getAuthentication();
 
-        if (!(authentication != null
-                && authentication.getPrincipal() instanceof UserDetailsImpl principal)) {
+        if (authentication == null) {
             throw unauthenticatedException();
         }
 
-        return principal;
+        return (UserDetailsImpl) authentication.getPrincipal();
     }
 
     private ResponseStatusException unauthenticatedException() {

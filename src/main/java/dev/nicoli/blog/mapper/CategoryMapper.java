@@ -19,4 +19,11 @@ public final class CategoryMapper {
                 category.getName());
     }
 
+    public static void updateEntity(Category category,
+                                    CategoryRequest request) {
+        if (request.name() != null) {
+            category.setName(request.name());
+        }
+    }
+
 }

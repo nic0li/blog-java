@@ -15,20 +15,20 @@ public class AuthorizationService {
         this.authenticationService = authenticationService;
     }
 
-    public User currentUser() {
+    public User getAuthenticatedUser() {
         return authenticationService.getAuthenticatedUser();
     }
 
-    public boolean isNotOwner(User user) {
-        return !user.getId().equals(currentUser().getId());
+    public boolean isOwner(User resourceOwner) {
+        return isOwner(resourceOwner, getAuthenticatedUser());
     }
 
-    public boolean isNotAdmin() {
-        return currentUser().getRole() != UserRole.ADMIN;
+    public boolean isAdmin() {
+        return isAdmin(getAuthenticatedUser());
     }
 
-    public void validateOwner(User user) {
-        if (isNotOwner(user)) {
+    public void validateOwner(User resourceOwner) {
+        if (!isOwner(resourceOwner)) {
             throw new ResponseStatusException(
                     HttpStatus.FORBIDDEN,
                     "You are not allowed to modify this resource");
@@ -36,19 +36,28 @@ public class AuthorizationService {
     }
 
     public void validateAdmin() {
-        if (isNotAdmin()) {
+        if (!isAdmin()) {
             throw new ResponseStatusException(
                     HttpStatus.FORBIDDEN,
                     "Administrator privileges required");
         }
     }
 
-    public void validateOwnerOrAdmin(User user) {
-        if (isNotOwner(user) && isNotAdmin()) {
+    public void validateOwnerOrAdmin(User resourceOwner) {
+        User authenticatedUser = getAuthenticatedUser();
+        if (!isOwner(resourceOwner, authenticatedUser) && !isAdmin(authenticatedUser)) {
             throw new ResponseStatusException(
                     HttpStatus.FORBIDDEN,
                     "You are not allowed to modify this resource");
         }
+    }
+
+    private boolean isOwner(User resourceOwner, User authenticatedUser) {
+        return resourceOwner.getId().equals(authenticatedUser.getId());
+    }
+
+    private boolean isAdmin(User authenticatedUser) {
+        return authenticatedUser.getRole() == UserRole.ADMIN;
     }
 
 }

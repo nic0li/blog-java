@@ -51,7 +51,7 @@ public class PostService extends AbstractCrudService<Post,
     public PostResponse create(PostCreateRequest request) {
         Post post = PostMapper.createEntity(request);
         post.setCategory(categoryService.getById(request.categoryId()));
-        post.setUser(authorizationService.currentUser());
+        post.setUser(authorizationService.getAuthenticatedUser());
         return PostMapper.toResponse(repository.save(post));
     }
 
@@ -80,7 +80,7 @@ public class PostService extends AbstractCrudService<Post,
 
     @Transactional(readOnly = true)
     public List<PostViewResponse> findByAuthenticatedUser() {
-        var user = authorizationService.currentUser();
+        var user = authorizationService.getAuthenticatedUser();
         return repository.findAllByUserId(user.getId()).stream()
                 .map(PostMapper::toViewResponse).toList();
     }
