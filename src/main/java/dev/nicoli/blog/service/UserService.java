@@ -2,21 +2,16 @@ package dev.nicoli.blog.service;
 
 import dev.nicoli.blog.common.enums.UserRole;
 import dev.nicoli.blog.common.service.AbstractCrudService;
-import dev.nicoli.blog.dto.user.UserCreateRequest;
-import dev.nicoli.blog.dto.user.UserResponse;
-import dev.nicoli.blog.dto.user.UserUpdateRequest;
-import dev.nicoli.blog.dto.user.UserViewResponse;
+import dev.nicoli.blog.dto.user.*;
 import dev.nicoli.blog.entity.User;
 import dev.nicoli.blog.mapper.UserMapper;
 import dev.nicoli.blog.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.function.Function;
 
 @Service
 public class UserService extends AbstractCrudService<User,
@@ -34,24 +29,10 @@ public class UserService extends AbstractCrudService<User,
     public UserService(UserRepository repository,
                        AuthorizationService authorizationService,
                        PasswordEncoder passwordEncoder) {
+        super(repository, User.class);
         this.repository = repository;
         this.authorizationService = authorizationService;
         this.passwordEncoder = passwordEncoder;
-    }
-
-    @Override
-    protected UserRepository repository() {
-        return repository;
-    }
-
-    @Override
-    protected Function<User, UserViewResponse> mapperResponse() {
-        return UserMapper::toViewResponse;
-    }
-
-    @Override
-    protected void validateDeleteAuthorization(User user) {
-        authorizationService.validateOwnerOrAdmin(user);
     }
 
     @Override
@@ -72,11 +53,22 @@ public class UserService extends AbstractCrudService<User,
         return UserMapper.toResponse(repository.save(user));
     }
 
-    @Transactional(readOnly = true)
+    @Override
+    public void delete(Long id) {
+        User user = getById(id);
+        authorizationService.validateOwnerOrAdmin(user);
+        repository.delete(user);
+    }
+
+    @Override
+    public UserViewResponse findById(Long id) {
+        return UserMapper.toViewResponse(getById(id));
+    }
+
     public List<UserViewResponse> findAll() {
-        return repository().findAll()
+        return repository.findAll()
                 .stream()
-                .map(mapperResponse())
+                .map(UserMapper::toViewResponse)
                 .toList();
     }
 

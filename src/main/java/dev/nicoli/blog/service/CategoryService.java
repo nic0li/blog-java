@@ -1,8 +1,7 @@
 package dev.nicoli.blog.service;
 
 import dev.nicoli.blog.common.service.AbstractCrudService;
-import dev.nicoli.blog.dto.category.CategoryRequest;
-import dev.nicoli.blog.dto.category.CategoryResponse;
+import dev.nicoli.blog.dto.category.*;
 import dev.nicoli.blog.entity.Category;
 import dev.nicoli.blog.mapper.CategoryMapper;
 import dev.nicoli.blog.repository.CategoryRepository;
@@ -11,7 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.function.Function;
 
 @Service
 public class CategoryService extends AbstractCrudService<Category,
@@ -26,23 +24,9 @@ public class CategoryService extends AbstractCrudService<Category,
 
     public CategoryService(CategoryRepository repository,
                            AuthorizationService authorizationService) {
+        super(repository, Category.class);
         this.repository = repository;
         this.authorizationService = authorizationService;
-    }
-
-    @Override
-    protected CategoryRepository repository() {
-        return repository;
-    }
-
-    @Override
-    protected Function<Category, CategoryResponse> mapperResponse() {
-        return CategoryMapper::toResponse;
-    }
-
-    @Override
-    protected void validateDeleteAuthorization(Category category) {
-        authorizationService.validateAdmin();
     }
 
     @Override
@@ -60,6 +44,18 @@ public class CategoryService extends AbstractCrudService<Category,
         validateUniqueName(request.name(), id);
         CategoryMapper.updateEntity(category, request);
         return CategoryMapper.toResponse(repository.save(category));
+    }
+
+    @Override
+    public void delete(Long id) {
+        authorizationService.validateAdmin();
+        Category category = getById(id);
+        repository.delete(category);
+    }
+
+    @Override
+    public CategoryResponse findById(Long id) {
+        return CategoryMapper.toResponse(getById(id));
     }
 
     public List<CategoryResponse> findAll(String name) {

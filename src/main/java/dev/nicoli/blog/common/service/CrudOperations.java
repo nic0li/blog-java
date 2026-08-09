@@ -6,12 +6,12 @@ public interface CrudOperations<
         CreateRequest,
         UpdateRequest> {
 
-    ViewResponse findById(Long id);
-
     Response create(CreateRequest request);
 
     Response update(Long id, UpdateRequest request);
 
     void delete(Long id);
+
+    ViewResponse findById(Long id);
 
 }

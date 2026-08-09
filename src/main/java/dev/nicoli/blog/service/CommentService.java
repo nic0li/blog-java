@@ -1,18 +1,13 @@
 package dev.nicoli.blog.service;
 
 import dev.nicoli.blog.common.service.AbstractCrudService;
-import dev.nicoli.blog.dto.comment.CommentCreateRequest;
-import dev.nicoli.blog.dto.comment.CommentResponse;
-import dev.nicoli.blog.dto.comment.CommentUpdateRequest;
-import dev.nicoli.blog.dto.comment.CommentViewResponse;
+import dev.nicoli.blog.dto.comment.*;
 import dev.nicoli.blog.entity.Comment;
 import dev.nicoli.blog.mapper.CommentMapper;
 import dev.nicoli.blog.repository.CommentRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.function.Function;
 
 @Service
 public class CommentService extends AbstractCrudService<Comment,
@@ -30,24 +25,10 @@ public class CommentService extends AbstractCrudService<Comment,
     public CommentService(CommentRepository repository,
                           AuthorizationService authorizationService,
                           PostService postService) {
+        super(repository, Comment.class);
         this.repository = repository;
         this.authorizationService = authorizationService;
         this.postService = postService;
-    }
-
-    @Override
-    protected CommentRepository repository() {
-        return repository;
-    }
-
-    @Override
-    protected Function<Comment, CommentViewResponse> mapperResponse() {
-        return CommentMapper::toViewResponse;
-    }
-
-    @Override
-    protected void validateDeleteAuthorization(Comment comment) {
-        authorizationService.validateOwnerOrAdmin(comment.getUser());
     }
 
     @Override
@@ -66,11 +47,22 @@ public class CommentService extends AbstractCrudService<Comment,
         return CommentMapper.toResponse(repository.save(comment));
     }
 
-    @Transactional(readOnly = true)
+    @Override
+    public void delete(Long id) {
+        Comment comment = getById(id);
+        authorizationService.validateOwnerOrAdmin(comment.getUser());
+        repository.delete(comment);
+    }
+
+    @Override
+    public CommentViewResponse findById(Long id) {
+        return CommentMapper.toViewResponse(getById(id));
+    }
+
     public List<CommentViewResponse> findAll() {
-        return repository().findAll()
+        return repository.findAll()
                 .stream()
-                .map(mapperResponse())
+                .map(CommentMapper::toViewResponse)
                 .toList();
     }
 

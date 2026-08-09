@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.function.Function;
 
 @Service
 public class PostService extends AbstractCrudService<Post,
@@ -27,24 +26,10 @@ public class PostService extends AbstractCrudService<Post,
     public PostService(PostRepository repository,
                        AuthorizationService authorizationService,
                        CategoryService categoryService) {
+        super(repository, Post.class);
         this.repository = repository;
         this.authorizationService = authorizationService;
         this.categoryService = categoryService;
-    }
-
-    @Override
-    protected PostRepository repository() {
-        return repository;
-    }
-
-    @Override
-    protected Function<Post, PostViewResponse> mapperResponse() {
-        return PostMapper::toViewResponse;
-    }
-
-    @Override
-    protected void validateDeleteAuthorization(Post post) {
-        authorizationService.validateOwnerOrAdmin(post.getUser());
     }
 
     @Override
@@ -66,23 +51,36 @@ public class PostService extends AbstractCrudService<Post,
         return PostMapper.toResponse(repository.save(post));
     }
 
+    @Override
+    public void delete(Long id) {
+        Post post = getById(id);
+        authorizationService.validateOwnerOrAdmin(post.getUser());
+        repository.delete(post);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PostViewResponse findById(Long id) {
+        return PostMapper.toViewResponse(getById(id));
+    }
+
     @Transactional(readOnly = true)
     public List<PostViewResponse> findAll(PostFiltersRequest request) {
         return findPosts(request).stream()
-                .map(mapperResponse()).toList();
+                .map(PostMapper::toViewResponse).toList();
     }
 
     @Transactional(readOnly = true)
     public List<PostViewResponse> findByUser(Long id) {
         return repository.findAllByUserId(id).stream()
-                .map(mapperResponse()).toList();
+                .map(PostMapper::toViewResponse).toList();
     }
 
     @Transactional(readOnly = true)
     public List<PostViewResponse> findByAuthenticatedUser() {
         var user = authorizationService.getAuthenticatedUser();
         return repository.findAllByUserId(user.getId()).stream()
-                .map(mapperResponse()).toList();
+                .map(PostMapper::toViewResponse).toList();
     }
 
     private List<Post> findPosts(PostFiltersRequest request) {
