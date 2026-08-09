@@ -24,34 +24,29 @@ public abstract class AbstractCrudService<Entity,
 
     protected abstract void validateDeleteAuthorization(Entity entity);
 
-    protected Entity findEntityById(Long id) {
-        return repository().findById(id)
-                .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.NOT_FOUND,
-                        entityName() + " not found"));
-    }
-
-    protected String entityName() {
-        var type =
-                (ParameterizedType) getClass().getGenericSuperclass();
-        var entityClass =
-                (Class<?>) type.getActualTypeArguments()[0];
+    private String getEntityClassName() {
+        var entityClass = (Class<?>)
+                ((ParameterizedType) getClass().getGenericSuperclass())
+                        .getActualTypeArguments()[0];
         return entityClass.getSimpleName();
     }
 
     public Entity getById(Long id) {
-        return findEntityById(id);
+        return repository().findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        getEntityClassName() + " not found"));
     }
 
     @Override
     @Transactional(readOnly = true)
     public ViewResponse findById(Long id) {
-        return mapperResponse().apply(findEntityById(id));
+        return mapperResponse().apply(getById(id));
     }
 
     @Override
     public void delete(Long id) {
-        Entity entity = findEntityById(id);
+        Entity entity = getById(id);
         validateDeleteAuthorization(entity);
         repository().delete(entity);
     }

@@ -40,15 +40,12 @@ class UserServiceTest {
     void shouldCreateUserSuccessfully() {
         // Given
         UserCreateRequest request = UserFactory.createRequest();
-
         User maria = UserFactory.maria();
 
         when(repository.findByEmail("maria@email.com"))
                 .thenReturn(Optional.empty());
-
         when(passwordEncoder.encode("123456"))
                 .thenReturn("encoded-password");
-
         when(repository.save(any(User.class)))
                 .thenReturn(maria);
 
@@ -65,10 +62,9 @@ class UserServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenEmailAlreadyExists() {
+    void shouldThrowExceptionWhenCreatingUserWithExistingEmail() {
         // Given
         UserCreateRequest request = UserFactory.createRequest();
-
         User maria = UserFactory.maria();
 
         when(repository.findByEmail("maria@email.com"))
@@ -88,15 +84,12 @@ class UserServiceTest {
     void shouldUpdateUserSuccessfully() {
         // Given
         UserUpdateRequest request = UserFactory.updateRequest();
-
         User maria = UserFactory.maria();
 
         when(repository.findById(1L))
                 .thenReturn(Optional.of(maria));
-
         when(repository.findByEmail("mariasilva@email.com"))
                 .thenReturn(Optional.empty());
-
         when(repository.save(maria))
                 .thenReturn(maria);
 
@@ -121,12 +114,10 @@ class UserServiceTest {
                 "Maria Silva",
                 null,
                 "dev");
-
         User maria = UserFactory.maria();
 
         when(repository.findById(1L))
                 .thenReturn(Optional.of(maria));
-
         when(repository.save(maria))
                 .thenReturn(maria);
 
@@ -151,15 +142,12 @@ class UserServiceTest {
                         "Maria Silva",
                         null,
                         "dev");
-
         User maria = UserFactory.maria();
 
         when(repository.findById(1L))
                 .thenReturn(Optional.of(maria));
-
         when(repository.findByEmail("maria@email.com"))
                 .thenReturn(Optional.of(maria));
-
         when(repository.save(maria))
                 .thenReturn(maria);
 
@@ -180,14 +168,11 @@ class UserServiceTest {
     void shouldThrowExceptionWhenUpdatingWithExistingEmail() {
         // Given
         UserUpdateRequest request = UserFactory.updateRequest();
-
         User maria = UserFactory.maria();
-
         User mariaSilva = UserFactory.mariaSilva();
 
         when(repository.findById(1L))
                 .thenReturn(Optional.of(maria));
-
         when(repository.findByEmail("mariasilva@email.com"))
                 .thenReturn(Optional.of(mariaSilva));
 
@@ -206,7 +191,6 @@ class UserServiceTest {
     void shouldReturnAllUsers() {
         // Given
         User maria = UserFactory.maria();
-
         User mariaSilva = UserFactory.mariaSilva();
 
         when(repository.findAll())
@@ -250,10 +234,8 @@ class UserServiceTest {
         UserViewResponse response = service.findById(1L);
 
         // Then
-        assertEquals(1L, response.id());
-        assertEquals("Maria", response.name());
-        assertNull(response.photo());
-        assertNull(response.bio());
+        UserViewResponse expected = UserFactory.viewResponse();
+        assertEquals(expected, response);
 
         verify(repository).findById(1L);
     }
@@ -294,15 +276,12 @@ class UserServiceTest {
     void shouldUpdateAuthenticatedUserSuccessfully() {
         // Given
         UserUpdateRequest request = UserFactory.updateRequest();
-
         User maria = UserFactory.maria();
 
         when(authorizationService.getAuthenticatedUser())
                 .thenReturn(maria);
-
         when(repository.findByEmail("mariasilva@email.com"))
                 .thenReturn(Optional.empty());
-
         when(repository.save(maria))
                 .thenReturn(maria);
 
@@ -321,15 +300,12 @@ class UserServiceTest {
     @Test
     void shouldThrowExceptionWhenUpdatingAuthenticatedUserWithExistingEmail() {
         // Given
-        User maria = UserFactory.maria();
-
-        User mariaSilva = UserFactory.mariaSilva();
-
         UserUpdateRequest request = UserFactory.updateRequest();
+        User maria = UserFactory.maria();
+        User mariaSilva = UserFactory.mariaSilva();
 
         when(authorizationService.getAuthenticatedUser())
                 .thenReturn(maria);
-
         when(repository.findByEmail("mariasilva@email.com"))
                 .thenReturn(Optional.of(mariaSilva));
 

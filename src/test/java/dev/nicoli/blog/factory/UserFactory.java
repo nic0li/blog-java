@@ -4,6 +4,7 @@ import dev.nicoli.blog.common.enums.UserRole;
 import dev.nicoli.blog.dto.user.UserCreateRequest;
 import dev.nicoli.blog.dto.user.UserResponse;
 import dev.nicoli.blog.dto.user.UserUpdateRequest;
+import dev.nicoli.blog.dto.user.UserViewResponse;
 import dev.nicoli.blog.entity.User;
 
 public final class UserFactory {
@@ -49,6 +50,14 @@ public final class UserFactory {
                 null,
                 null,
                 UserRole.USER);
+    }
+
+    public static UserViewResponse viewResponse() {
+        return new UserViewResponse(
+                1L,
+                "Maria",
+                null,
+                null);
     }
 
     public static UserResponse updatedResponse() {

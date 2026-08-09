@@ -69,20 +69,20 @@ public class PostService extends AbstractCrudService<Post,
     @Transactional(readOnly = true)
     public List<PostViewResponse> findAll(PostFiltersRequest request) {
         return findPosts(request).stream()
-                .map(PostMapper::toViewResponse).toList();
+                .map(mapperResponse()).toList();
     }
 
     @Transactional(readOnly = true)
     public List<PostViewResponse> findByUser(Long id) {
         return repository.findAllByUserId(id).stream()
-                .map(PostMapper::toViewResponse).toList();
+                .map(mapperResponse()).toList();
     }
 
     @Transactional(readOnly = true)
     public List<PostViewResponse> findByAuthenticatedUser() {
         var user = authorizationService.getAuthenticatedUser();
         return repository.findAllByUserId(user.getId()).stream()
-                .map(PostMapper::toViewResponse).toList();
+                .map(mapperResponse()).toList();
     }
 
     private List<Post> findPosts(PostFiltersRequest request) {
