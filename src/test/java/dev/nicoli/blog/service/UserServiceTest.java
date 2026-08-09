@@ -1,9 +1,6 @@
 package dev.nicoli.blog.service;
 
-import dev.nicoli.blog.dto.user.UserCreateRequest;
-import dev.nicoli.blog.dto.user.UserResponse;
-import dev.nicoli.blog.dto.user.UserUpdateRequest;
-import dev.nicoli.blog.dto.user.UserViewResponse;
+import dev.nicoli.blog.dto.user.*;
 import dev.nicoli.blog.entity.User;
 import dev.nicoli.blog.factory.UserFactory;
 import dev.nicoli.blog.repository.UserRepository;
@@ -125,7 +122,7 @@ class UserServiceTest {
         UserResponse response = service.update(1L, request);
 
         // Then
-        UserResponse expected = UserFactory.updatedResponseWithoutChangingEmail();
+        UserResponse expected = UserFactory.updatedResponseWithSameEmail();
         assertEquals(expected, response);
 
         verify(repository).findById(1L);
@@ -155,7 +152,7 @@ class UserServiceTest {
         UserResponse response = service.update(1L, request);
 
         // Then
-        UserResponse expected = UserFactory.updatedResponseWithoutChangingEmail();
+        UserResponse expected = UserFactory.updatedResponseWithSameEmail();
         assertEquals(expected, response);
 
         verify(repository).findById(1L);

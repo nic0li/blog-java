@@ -89,7 +89,7 @@ class PostServiceTest {
     @Test
     void shouldUpdatePostWithoutChangingCategory() {
         // Given
-        PostUpdateRequest request = PostFactory.emptyUpdateRequest();
+        PostUpdateRequest request = new PostUpdateRequest(null, null, null);
         Post post = PostFactory.post();
 
         when(repository.findById(1L))
@@ -134,19 +134,19 @@ class PostServiceTest {
         // Given
         Post post = PostFactory.post();
 
-        when(repository.findAllByTitleContainingIgnoreCase("Spring"))
+        when(repository.findAllByTitleContainingIgnoreCase("Like"))
                 .thenReturn(List.of(post));
 
         // When
         List<PostViewResponse> response =
-                service.findAll(new PostFiltersRequest("Spring", null));
+                service.findAll(new PostFiltersRequest("Like", null));
 
         // Then
         assertEquals(1, response.size());
         assertEquals(post.getId(), response.getFirst().id());
 
         verify(repository)
-                .findAllByTitleContainingIgnoreCase("Spring");
+                .findAllByTitleContainingIgnoreCase("Like");
     }
 
     @Test
@@ -176,13 +176,13 @@ class PostServiceTest {
 
         when(repository
                 .findAllByTitleContainingIgnoreCaseAndCategoryNameContainingIgnoreCase(
-                        "Spring",
+                        "Like",
                         "Movies"))
                 .thenReturn(List.of(post));
 
         // When
         List<PostViewResponse> response =
-                service.findAll(new PostFiltersRequest("Spring", "Movies"));
+                service.findAll(new PostFiltersRequest("Like", "Movies"));
 
         // Then
         assertEquals(1, response.size());
@@ -190,7 +190,7 @@ class PostServiceTest {
 
         verify(repository)
                 .findAllByTitleContainingIgnoreCaseAndCategoryNameContainingIgnoreCase(
-                        "Spring",
+                        "Like",
                         "Movies");
     }
 

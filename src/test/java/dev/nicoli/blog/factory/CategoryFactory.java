@@ -1,7 +1,6 @@
 package dev.nicoli.blog.factory;
 
-import dev.nicoli.blog.dto.category.CategoryRequest;
-import dev.nicoli.blog.dto.category.CategoryResponse;
+import dev.nicoli.blog.dto.category.*;
 import dev.nicoli.blog.entity.Category;
 
 public final class CategoryFactory {

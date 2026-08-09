@@ -1,9 +1,6 @@
 package dev.nicoli.blog.service;
 
-import dev.nicoli.blog.dto.comment.CommentCreateRequest;
-import dev.nicoli.blog.dto.comment.CommentResponse;
-import dev.nicoli.blog.dto.comment.CommentUpdateRequest;
-import dev.nicoli.blog.dto.comment.CommentViewResponse;
+import dev.nicoli.blog.dto.comment.*;
 import dev.nicoli.blog.entity.Comment;
 import dev.nicoli.blog.factory.CommentFactory;
 import dev.nicoli.blog.factory.PostFactory;

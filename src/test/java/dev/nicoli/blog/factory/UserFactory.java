@@ -1,10 +1,7 @@
 package dev.nicoli.blog.factory;
 
 import dev.nicoli.blog.common.enums.UserRole;
-import dev.nicoli.blog.dto.user.UserCreateRequest;
-import dev.nicoli.blog.dto.user.UserResponse;
-import dev.nicoli.blog.dto.user.UserUpdateRequest;
-import dev.nicoli.blog.dto.user.UserViewResponse;
+import dev.nicoli.blog.dto.user.*;
 import dev.nicoli.blog.entity.User;
 
 public final class UserFactory {
@@ -70,7 +67,7 @@ public final class UserFactory {
                 UserRole.USER);
     }
 
-    public static UserResponse updatedResponseWithoutChangingEmail() {
+    public static UserResponse updatedResponseWithSameEmail() {
         return new UserResponse(
                 1L,
                 "maria@email.com",

@@ -1,9 +1,6 @@
 package dev.nicoli.blog.factory;
 
-import dev.nicoli.blog.dto.comment.CommentCreateRequest;
-import dev.nicoli.blog.dto.comment.CommentUpdateRequest;
-import dev.nicoli.blog.dto.comment.CommentResponse;
-import dev.nicoli.blog.dto.comment.CommentViewResponse;
+import dev.nicoli.blog.dto.comment.*;
 import dev.nicoli.blog.entity.Comment;
 
 public final class CommentFactory {
@@ -34,10 +31,6 @@ public final class CommentFactory {
     public static CommentUpdateRequest updateRequest() {
         return new CommentUpdateRequest(
                 "Updated comment!");
-    }
-
-    public static CommentUpdateRequest emptyUpdateRequest() {
-        return new CommentUpdateRequest(null);
     }
 
     public static CommentResponse response() {
