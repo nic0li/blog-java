@@ -58,6 +58,9 @@ public class JwtService {
 
     private String createToken(Map<String, Object> claims, Long userId) {
         return Jwts.builder()
+                .header()
+                .type("JWT")
+                .and()
                 .claims(claims)
                 .subject(userId.toString())
                 .issuedAt(new Date())

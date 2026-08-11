@@ -106,11 +106,11 @@ class UserServiceTest {
     @Test
     void shouldUpdateUserWithoutChangingEmail() {
         // Given
-        UserUpdateRequest request = new UserUpdateRequest(
-                null,
-                "Maria Silva",
-                null,
-                "dev");
+        UserUpdateRequest request = new UserUpdateRequest();
+        request.setEmail(null);
+        request.setName("Maria Silva");
+        request.setPhoto(null);
+        request.setBio("dev");
         User maria = UserFactory.maria();
 
         when(repository.findById(1L))
@@ -134,11 +134,11 @@ class UserServiceTest {
     @Test
     void shouldUpdateUserKeepingSameEmail() {
         // Given
-        UserUpdateRequest request = new UserUpdateRequest(
-                        "maria@email.com",
-                        "Maria Silva",
-                        null,
-                        "dev");
+        UserUpdateRequest request = new UserUpdateRequest();
+        request.setEmail("maria@email.com");
+        request.setName("Maria Silva");
+        request.setPhoto(null);
+        request.setBio("dev");
         User maria = UserFactory.maria();
 
         when(repository.findById(1L))

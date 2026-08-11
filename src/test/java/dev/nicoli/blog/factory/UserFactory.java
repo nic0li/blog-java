@@ -32,11 +32,12 @@ public final class UserFactory {
     }
 
     public static UserUpdateRequest updateRequest() {
-        return new UserUpdateRequest(
-                "mariasilva@email.com",
-                "Maria Silva",
-                null,
-                "dev");
+        UserUpdateRequest request = new UserUpdateRequest();
+        request.setEmail("mariasilva@email.com");
+        request.setName("Maria Silva");
+        request.setPhoto(null);
+        request.setBio("dev");
+        return request;
     }
 
     public static UserResponse response() {

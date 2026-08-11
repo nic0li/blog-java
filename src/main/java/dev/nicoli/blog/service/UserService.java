@@ -48,9 +48,7 @@ public class UserService extends AbstractCrudService<User,
     public UserResponse update(Long id, UserUpdateRequest request) {
         User user = getById(id);
         authorizationService.validateOwner(user);
-        validateEmailAvailability(request.email(), user.getId());
-        UserMapper.updateEntity(user, request);
-        return UserMapper.toResponse(repository.save(user));
+        return updateUserResponse(request, user);
     }
 
     @Override
@@ -79,9 +77,7 @@ public class UserService extends AbstractCrudService<User,
 
     public UserResponse updateMe(UserUpdateRequest request) {
         User user = authorizationService.getAuthenticatedUser();
-        validateEmailAvailability(request.email(), user.getId());
-        UserMapper.updateEntity(user, request);
-        return UserMapper.toResponse(repository.save(user));
+        return updateUserResponse(request, user);
     }
 
     public void deleteMe() {
@@ -89,8 +85,17 @@ public class UserService extends AbstractCrudService<User,
         repository.delete(user);
     }
 
+    private UserResponse updateUserResponse(UserUpdateRequest request, User user) {
+        if (request.isEmailProvided()
+                && request.getEmail() != null && !request.getEmail().isBlank()) {
+            validateEmailAvailability(request.getEmail(), user.getId());
+        }
+        UserMapper.updateEntity(user, request);
+        return UserMapper.toResponse(repository.save(user));
+    }
+
     private void validateEmailAvailability(String email, Long userId) {
-        if (email == null) {
+        if (email == null || email.isBlank()) {
             return;
         }
         var userByEmail = repository.findByEmail(email);

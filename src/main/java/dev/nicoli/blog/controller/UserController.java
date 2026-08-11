@@ -8,6 +8,7 @@ import dev.nicoli.blog.service.PostService;
 import dev.nicoli.blog.service.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +45,7 @@ public class UserController {
     @PatchMapping("/{id}")
     public ResponseEntity<UserResponse> update(
             @PathVariable Long id,
-            @RequestBody UserUpdateRequest request) {
+            @Valid @RequestBody UserUpdateRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(service.update(id, request));
     }
@@ -62,7 +63,7 @@ public class UserController {
 
     @PatchMapping("/me")
     public ResponseEntity<UserResponse> updateMe(
-            @RequestBody UserUpdateRequest request) {
+            @Valid @RequestBody UserUpdateRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(service.updateMe(request));
     }

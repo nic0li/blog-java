@@ -19,17 +19,22 @@ public final class UserMapper {
     }
 
     public static void updateEntity(User user, UserUpdateRequest request) {
-        if (request.email() != null) {
-            user.setEmail(request.email());
+        if (request.isEmailProvided()
+                && request.getEmail() != null
+                && !request.getEmail().isBlank()) {
+            user.setEmail(request.getEmail());
         }
-        if (request.name() != null) {
-            user.setName(request.name());
+        if (request.isNameProvided()) {
+            user.setName(request.getName() == null || request.getName().isBlank()
+                    ? null : request.getName());
         }
-        if (request.photo() != null) {
-            user.setPhoto(request.photo());
+        if (request.isPhotoProvided()) {
+            user.setPhoto(request.getPhoto() == null || request.getPhoto().isBlank()
+                    ? null : request.getPhoto());
         }
-        if (request.bio() != null) {
-            user.setBio(request.bio());
+        if (request.isBioProvided()) {
+            user.setBio(request.getBio() == null || request.getBio().isBlank()
+                    ? null : request.getBio());
         }
     }
 
