@@ -4,6 +4,7 @@ import dev.nicoli.blog.dto.category.*;
 import dev.nicoli.blog.entity.Category;
 import dev.nicoli.blog.factory.CategoryFactory;
 import dev.nicoli.blog.repository.CategoryRepository;
+import dev.nicoli.blog.service.interfaces.AuthorizationService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,7 +28,7 @@ class CategoryServiceTest {
     private AuthorizationService authorizationService;
 
     @InjectMocks
-    private CategoryService service;
+    private CategoryServiceImpl service;
 
     @Test
     void shouldCreateCategorySuccessfully() {

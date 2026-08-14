@@ -5,8 +5,6 @@ import dev.nicoli.blog.entity.Category;
 
 public final class CategoryFactory {
 
-    private CategoryFactory() { }
-
     public static Category movies() {
         return category(1L, "Movies");
     }

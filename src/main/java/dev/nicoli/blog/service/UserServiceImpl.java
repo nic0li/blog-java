@@ -1,11 +1,12 @@
 package dev.nicoli.blog.service;
 
 import dev.nicoli.blog.common.enums.UserRole;
-import dev.nicoli.blog.common.service.AbstractCrudService;
+import dev.nicoli.blog.common.service.CrudServiceImpl;
 import dev.nicoli.blog.dto.user.*;
 import dev.nicoli.blog.entity.User;
 import dev.nicoli.blog.mapper.UserMapper;
 import dev.nicoli.blog.repository.UserRepository;
+import dev.nicoli.blog.service.interfaces.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,11 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @Service
-public class UserService extends AbstractCrudService<User,
-        UserResponse,
-        UserViewResponse,
-        UserCreateRequest,
-        UserUpdateRequest> {
+public class UserServiceImpl extends CrudServiceImpl<User> implements UserService {
 
     private final UserRepository repository;
 
@@ -26,9 +23,9 @@ public class UserService extends AbstractCrudService<User,
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository repository,
-                       AuthorizationService authorizationService,
-                       PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository repository,
+                           AuthorizationService authorizationService,
+                           PasswordEncoder passwordEncoder) {
         super(repository, User.class);
         this.repository = repository;
         this.authorizationService = authorizationService;
@@ -63,6 +60,7 @@ public class UserService extends AbstractCrudService<User,
         return UserMapper.toViewResponse(getById(id));
     }
 
+    @Override
     public List<UserViewResponse> findAll() {
         return repository.findAll()
                 .stream()
@@ -70,16 +68,19 @@ public class UserService extends AbstractCrudService<User,
                 .toList();
     }
 
+    @Override
     public UserResponse findMe() {
         User user = authorizationService.getAuthenticatedUser();
         return UserMapper.toResponse(user);
     }
 
+    @Override
     public UserResponse updateMe(UserUpdateRequest request) {
         User user = authorizationService.getAuthenticatedUser();
         return updateUserResponse(request, user);
     }
 
+    @Override
     public void deleteMe() {
         User user = authorizationService.getAuthenticatedUser();
         repository.delete(user);

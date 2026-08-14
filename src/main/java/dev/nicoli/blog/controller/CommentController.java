@@ -1,10 +1,7 @@
 package dev.nicoli.blog.controller;
 
-import dev.nicoli.blog.dto.comment.CommentCreateRequest;
-import dev.nicoli.blog.dto.comment.CommentResponse;
-import dev.nicoli.blog.dto.comment.CommentUpdateRequest;
-import dev.nicoli.blog.dto.comment.CommentViewResponse;
-import dev.nicoli.blog.service.CommentService;
+import dev.nicoli.blog.dto.comment.*;
+import dev.nicoli.blog.service.interfaces.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;

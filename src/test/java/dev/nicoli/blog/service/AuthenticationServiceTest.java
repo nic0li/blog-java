@@ -1,12 +1,10 @@
 package dev.nicoli.blog.service;
 
-import dev.nicoli.blog.dto.authentication.LoginRequest;
-import dev.nicoli.blog.dto.authentication.LoginResponse;
+import dev.nicoli.blog.dto.authentication.*;
 import dev.nicoli.blog.entity.User;
 import dev.nicoli.blog.factory.UserFactory;
 import dev.nicoli.blog.repository.UserRepository;
-import dev.nicoli.blog.security.JwtService;
-import dev.nicoli.blog.security.UserDetailsImpl;
+import dev.nicoli.blog.security.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,7 +36,7 @@ class AuthenticationServiceTest {
     private AuthenticationManager authenticationManager;
 
     @InjectMocks
-    private AuthenticationService service;
+    private AuthenticationServiceImpl service;
 
     @AfterEach
     void clearSecurityContext() {

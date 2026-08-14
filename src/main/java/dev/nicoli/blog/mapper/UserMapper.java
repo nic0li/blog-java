@@ -1,9 +1,6 @@
 package dev.nicoli.blog.mapper;
 
-import dev.nicoli.blog.dto.user.UserCreateRequest;
-import dev.nicoli.blog.dto.user.UserResponse;
-import dev.nicoli.blog.dto.user.UserUpdateRequest;
-import dev.nicoli.blog.dto.user.UserViewResponse;
+import dev.nicoli.blog.dto.user.*;
 import dev.nicoli.blog.entity.User;
 
 public final class UserMapper {

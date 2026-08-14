@@ -1,20 +1,17 @@
 package dev.nicoli.blog.service;
 
-import dev.nicoli.blog.common.service.AbstractCrudService;
+import dev.nicoli.blog.common.service.CrudServiceImpl;
 import dev.nicoli.blog.dto.comment.*;
 import dev.nicoli.blog.entity.Comment;
 import dev.nicoli.blog.mapper.CommentMapper;
 import dev.nicoli.blog.repository.CommentRepository;
+import dev.nicoli.blog.service.interfaces.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class CommentService extends AbstractCrudService<Comment,
-        CommentResponse,
-        CommentViewResponse,
-        CommentCreateRequest,
-        CommentUpdateRequest> {
+public class CommentServiceImpl extends CrudServiceImpl<Comment> implements CommentService {
 
     private final CommentRepository repository;
 
@@ -22,9 +19,9 @@ public class CommentService extends AbstractCrudService<Comment,
 
     private final PostService postService;
 
-    public CommentService(CommentRepository repository,
-                          AuthorizationService authorizationService,
-                          PostService postService) {
+    public CommentServiceImpl(CommentRepository repository,
+                              AuthorizationService authorizationService,
+                              PostService postService) {
         super(repository, Comment.class);
         this.repository = repository;
         this.authorizationService = authorizationService;
@@ -59,6 +56,7 @@ public class CommentService extends AbstractCrudService<Comment,
         return CommentMapper.toViewResponse(getById(id));
     }
 
+    @Override
     public List<CommentViewResponse> findAll() {
         return repository.findAll()
                 .stream()

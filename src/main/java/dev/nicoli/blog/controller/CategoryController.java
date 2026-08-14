@@ -1,8 +1,7 @@
 package dev.nicoli.blog.controller;
 
-import dev.nicoli.blog.dto.category.CategoryRequest;
-import dev.nicoli.blog.dto.category.CategoryResponse;
-import dev.nicoli.blog.service.CategoryService;
+import dev.nicoli.blog.dto.category.*;
+import dev.nicoli.blog.service.interfaces.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;

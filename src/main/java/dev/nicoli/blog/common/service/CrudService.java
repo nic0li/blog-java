@@ -1,6 +1,6 @@
 package dev.nicoli.blog.common.service;
 
-public interface CrudOperations<
+public interface CrudService<
         Response,
         ViewResponse,
         CreateRequest,

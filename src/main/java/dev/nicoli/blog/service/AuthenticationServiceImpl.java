@@ -1,12 +1,11 @@
 package dev.nicoli.blog.service;
 
-import dev.nicoli.blog.dto.authentication.LoginRequest;
-import dev.nicoli.blog.dto.authentication.LoginResponse;
+import dev.nicoli.blog.dto.authentication.*;
 import dev.nicoli.blog.entity.User;
 import dev.nicoli.blog.mapper.UserMapper;
 import dev.nicoli.blog.repository.UserRepository;
-import dev.nicoli.blog.security.JwtService;
-import dev.nicoli.blog.security.UserDetailsImpl;
+import dev.nicoli.blog.security.*;
+import dev.nicoli.blog.service.interfaces.AuthenticationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
-public class AuthenticationService {
+public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final UserRepository repository;
 
@@ -24,14 +23,15 @@ public class AuthenticationService {
     
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationService(UserRepository repository,
-                                 JwtService jwtService,
-                                 AuthenticationManager authenticationManager) {
+    public AuthenticationServiceImpl(UserRepository repository,
+                                     JwtService jwtService,
+                                     AuthenticationManager authenticationManager) {
         this.repository = repository;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
     }
 
+    @Override
     public LoginResponse authenticate(LoginRequest request) {
         Authentication authentication =
                 authenticationManager.authenticate(
@@ -46,7 +46,8 @@ public class AuthenticationService {
         return new LoginResponse(UserMapper.toResponse(user), token);
     }
 
-    protected User getAuthenticatedUser() {
+    @Override
+    public User getAuthenticatedUser() {
         UserDetailsImpl principal = getAuthenticatedPrincipal();
 
         return repository.findById(principal.user().getId())

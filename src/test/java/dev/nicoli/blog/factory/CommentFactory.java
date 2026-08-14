@@ -5,8 +5,6 @@ import dev.nicoli.blog.entity.Comment;
 
 public final class CommentFactory {
 
-    private CommentFactory() { }
-
     public static Comment comment() {
         return comment("Great post!");
     }

@@ -1,10 +1,11 @@
 package dev.nicoli.blog.service;
 
-import dev.nicoli.blog.common.service.AbstractCrudService;
+import dev.nicoli.blog.common.service.CrudServiceImpl;
 import dev.nicoli.blog.dto.category.*;
 import dev.nicoli.blog.entity.Category;
 import dev.nicoli.blog.mapper.CategoryMapper;
 import dev.nicoli.blog.repository.CategoryRepository;
+import dev.nicoli.blog.service.interfaces.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -12,18 +13,14 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @Service
-public class CategoryService extends AbstractCrudService<Category,
-        CategoryResponse,
-        CategoryResponse,
-        CategoryRequest,
-        CategoryRequest> {
+public class CategoryServiceImpl extends CrudServiceImpl<Category> implements CategoryService {
 
     private final CategoryRepository repository;
 
     private final AuthorizationService authorizationService;
 
-    public CategoryService(CategoryRepository repository,
-                           AuthorizationService authorizationService) {
+    public CategoryServiceImpl(CategoryRepository repository,
+                               AuthorizationService authorizationService) {
         super(repository, Category.class);
         this.repository = repository;
         this.authorizationService = authorizationService;
@@ -58,6 +55,7 @@ public class CategoryService extends AbstractCrudService<Category,
         return CategoryMapper.toResponse(getById(id));
     }
 
+    @Override
     public List<CategoryResponse> findAll(String name) {
         return findCategories(name).stream()
                 .map(CategoryMapper::toResponse).toList();

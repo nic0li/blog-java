@@ -4,6 +4,7 @@ import dev.nicoli.blog.dto.user.*;
 import dev.nicoli.blog.entity.User;
 import dev.nicoli.blog.factory.UserFactory;
 import dev.nicoli.blog.repository.UserRepository;
+import dev.nicoli.blog.service.interfaces.AuthorizationService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -31,7 +32,7 @@ class UserServiceTest {
     private PasswordEncoder passwordEncoder;
 
     @InjectMocks
-    private UserService service;
+    private UserServiceImpl service;
 
     @Test
     void shouldCreateUserSuccessfully() {

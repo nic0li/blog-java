@@ -2,10 +2,9 @@ package dev.nicoli.blog.service;
 
 import dev.nicoli.blog.dto.comment.*;
 import dev.nicoli.blog.entity.Comment;
-import dev.nicoli.blog.factory.CommentFactory;
-import dev.nicoli.blog.factory.PostFactory;
-import dev.nicoli.blog.factory.UserFactory;
+import dev.nicoli.blog.factory.*;
 import dev.nicoli.blog.repository.CommentRepository;
+import dev.nicoli.blog.service.interfaces.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,7 +32,7 @@ class CommentServiceTest {
     private PostService postService;
 
     @InjectMocks
-    private CommentService service;
+    private CommentServiceImpl service;
 
     @Test
     void shouldCreateCommentSuccessfully() {

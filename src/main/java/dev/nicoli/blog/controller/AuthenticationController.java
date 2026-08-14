@@ -1,11 +1,8 @@
 package dev.nicoli.blog.controller;
 
-import dev.nicoli.blog.dto.authentication.LoginRequest;
-import dev.nicoli.blog.dto.authentication.LoginResponse;
-import dev.nicoli.blog.dto.user.UserCreateRequest;
-import dev.nicoli.blog.dto.user.UserResponse;
-import dev.nicoli.blog.service.AuthenticationService;
-import dev.nicoli.blog.service.UserService;
+import dev.nicoli.blog.dto.authentication.*;
+import dev.nicoli.blog.dto.user.*;
+import dev.nicoli.blog.service.interfaces.*;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;

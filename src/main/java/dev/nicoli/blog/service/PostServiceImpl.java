@@ -1,21 +1,18 @@
 package dev.nicoli.blog.service;
 
-import dev.nicoli.blog.common.service.AbstractCrudService;
+import dev.nicoli.blog.common.service.CrudServiceImpl;
 import dev.nicoli.blog.dto.post.*;
 import dev.nicoli.blog.entity.Post;
 import dev.nicoli.blog.mapper.PostMapper;
 import dev.nicoli.blog.repository.PostRepository;
+import dev.nicoli.blog.service.interfaces.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
-public class PostService extends AbstractCrudService<Post,
-        PostResponse,
-        PostViewResponse,
-        PostCreateRequest,
-        PostUpdateRequest> {
+public class PostServiceImpl extends CrudServiceImpl<Post> implements PostService {
 
     private final PostRepository repository;
 
@@ -23,9 +20,9 @@ public class PostService extends AbstractCrudService<Post,
 
     private final CategoryService categoryService;
 
-    public PostService(PostRepository repository,
-                       AuthorizationService authorizationService,
-                       CategoryService categoryService) {
+    public PostServiceImpl(PostRepository repository,
+                           AuthorizationService authorizationService,
+                           CategoryService categoryService) {
         super(repository, Post.class);
         this.repository = repository;
         this.authorizationService = authorizationService;
@@ -58,25 +55,28 @@ public class PostService extends AbstractCrudService<Post,
         repository.delete(post);
     }
 
-    @Override
     @Transactional(readOnly = true)
+    @Override
     public PostViewResponse findById(Long id) {
         return PostMapper.toViewResponse(getById(id));
     }
 
     @Transactional(readOnly = true)
+    @Override
     public List<PostViewResponse> findAll(PostFiltersRequest request) {
         return findPosts(request).stream()
                 .map(PostMapper::toViewResponse).toList();
     }
 
     @Transactional(readOnly = true)
+    @Override
     public List<PostViewResponse> findByUser(Long id) {
         return repository.findAllByUserId(id).stream()
                 .map(PostMapper::toViewResponse).toList();
     }
 
     @Transactional(readOnly = true)
+    @Override
     public List<PostViewResponse> findByAuthenticatedUser() {
         var user = authorizationService.getAuthenticatedUser();
         return repository.findAllByUserId(user.getId()).stream()

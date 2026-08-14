@@ -6,8 +6,6 @@ import dev.nicoli.blog.entity.User;
 
 public final class UserFactory {
 
-    private UserFactory() { }
-
     public static User user() {
         return user(1L,
                 "maria@email.com", "Maria", UserRole.USER);

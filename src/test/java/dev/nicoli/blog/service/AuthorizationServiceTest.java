@@ -2,6 +2,7 @@ package dev.nicoli.blog.service;
 
 import dev.nicoli.blog.entity.User;
 import dev.nicoli.blog.factory.UserFactory;
+import dev.nicoli.blog.service.interfaces.AuthenticationService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,7 +20,7 @@ class AuthorizationServiceTest {
     private AuthenticationService authenticationService;
 
     @InjectMocks
-    private AuthorizationService service;
+    private AuthorizationServiceImpl service;
 
     @Test
     void shouldReturnAuthenticatedUser() {

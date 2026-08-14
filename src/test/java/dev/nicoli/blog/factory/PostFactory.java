@@ -7,8 +7,6 @@ import java.util.List;
 
 public final class PostFactory {
 
-    private PostFactory() { }
-
     public static Post post() {
         return post("I like drama", "Content");
     }

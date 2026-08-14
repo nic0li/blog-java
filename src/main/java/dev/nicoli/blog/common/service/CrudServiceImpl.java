@@ -4,20 +4,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-public abstract class AbstractCrudService<Entity,
-        Response,
-        ViewResponse,
-        CreateRequest,
-        UpdateRequest> implements CrudOperations<
-        Response,
-        ViewResponse,
-        CreateRequest,
-        UpdateRequest> {
+public abstract class CrudServiceImpl<Entity> {
 
     private final JpaRepository<Entity, Long> repository;
     private final Class<Entity> entityClass;
 
-    protected AbstractCrudService(
+    protected CrudServiceImpl(
             JpaRepository<Entity, Long> repository,
             Class<Entity> entityClass) {
         this.repository = repository;
