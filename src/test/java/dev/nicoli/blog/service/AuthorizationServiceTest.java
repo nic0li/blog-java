@@ -24,16 +24,16 @@ class AuthorizationServiceTest {
     @Test
     void shouldReturnAuthenticatedUser() {
         // Given
-        User maria = UserFactory.maria();
+        User user = UserFactory.user();
 
         when(authenticationService.getAuthenticatedUser())
-                .thenReturn(maria);
+                .thenReturn(user);
 
         // When
         User response = service.getAuthenticatedUser();
 
         // Then
-        assertEquals(maria, response);
+        assertEquals(user, response);
 
         verify(authenticationService).getAuthenticatedUser();
     }
@@ -41,13 +41,13 @@ class AuthorizationServiceTest {
     @Test
     void shouldReturnTrueWhenUserIsOwner() {
         // Given
-        User maria = UserFactory.maria();
+        User user = UserFactory.user();
 
         when(authenticationService.getAuthenticatedUser())
-                .thenReturn(maria);
+                .thenReturn(user);
 
         // When
-        boolean response = service.isOwner(maria);
+        boolean response = service.isOwner(user);
 
         // Then
         assertTrue(response);
@@ -58,14 +58,14 @@ class AuthorizationServiceTest {
     @Test
     void shouldReturnFalseWhenUserIsNotOwner() {
         // Given
-        User maria = UserFactory.maria();
-        User mariaSilva = UserFactory.mariaSilva();
+        User user = UserFactory.user();
+        User admin = UserFactory.admin();
 
         when(authenticationService.getAuthenticatedUser())
-                .thenReturn(maria);
+                .thenReturn(user);
 
         // When
-        boolean response = service.isOwner(mariaSilva);
+        boolean response = service.isOwner(admin);
 
         // Then
         assertFalse(response);
@@ -76,10 +76,10 @@ class AuthorizationServiceTest {
     @Test
     void shouldReturnTrueWhenUserIsAdmin() {
         // Given
-        User mariaSilva = UserFactory.mariaSilva();
+        User admin = UserFactory.admin();
 
         when(authenticationService.getAuthenticatedUser())
-                .thenReturn(mariaSilva);
+                .thenReturn(admin);
 
         // When
         boolean response = service.isAdmin();
@@ -93,10 +93,10 @@ class AuthorizationServiceTest {
     @Test
     void shouldReturnFalseWhenUserIsNotAdmin() {
         // Given
-        User maria = UserFactory.maria();
+        User user = UserFactory.user();
 
         when(authenticationService.getAuthenticatedUser())
-                .thenReturn(maria);
+                .thenReturn(user);
 
         // When
         boolean response = service.isAdmin();
@@ -110,13 +110,13 @@ class AuthorizationServiceTest {
     @Test
     void shouldValidateOwner() {
         // Given
-        User maria = UserFactory.maria();
+        User user = UserFactory.user();
 
         when(authenticationService.getAuthenticatedUser())
-                .thenReturn(maria);
+                .thenReturn(user);
 
         // When
-        service.validateOwner(maria);
+        service.validateOwner(user);
 
         // Then
         verify(authenticationService).getAuthenticatedUser();
@@ -125,16 +125,16 @@ class AuthorizationServiceTest {
     @Test
     void shouldThrowExceptionWhenUserIsNotOwner() {
         // Given
-        User maria = UserFactory.maria();
-        User mariaSilva = UserFactory.mariaSilva();
+        User user = UserFactory.user();
+        User admin = UserFactory.admin();
 
         when(authenticationService.getAuthenticatedUser())
-                .thenReturn(maria);
+                .thenReturn(user);
 
         // When / Then
         assertThrows(
                 ResponseStatusException.class,
-                () -> service.validateOwner(mariaSilva));
+                () -> service.validateOwner(admin));
 
         verify(authenticationService).getAuthenticatedUser();
     }
@@ -142,10 +142,10 @@ class AuthorizationServiceTest {
     @Test
     void shouldValidateAdmin() {
         // Given
-        User mariaSilva = UserFactory.mariaSilva();
+        User admin = UserFactory.admin();
 
         when(authenticationService.getAuthenticatedUser())
-                .thenReturn(mariaSilva);
+                .thenReturn(admin);
 
         // When
         service.validateAdmin();
@@ -157,10 +157,10 @@ class AuthorizationServiceTest {
     @Test
     void shouldThrowExceptionWhenUserIsNotAdmin() {
         // Given
-        User maria = UserFactory.maria();
+        User user = UserFactory.user();
 
         when(authenticationService.getAuthenticatedUser())
-                .thenReturn(maria);
+                .thenReturn(user);
 
         // When / Then
         assertThrows(
@@ -173,13 +173,13 @@ class AuthorizationServiceTest {
     @Test
     void shouldValidateOwnerOrAdminWhenUserIsOwner() {
         // Given
-        User maria = UserFactory.maria();
+        User user = UserFactory.user();
 
         when(authenticationService.getAuthenticatedUser())
-                .thenReturn(maria);
+                .thenReturn(user);
 
         // When
-        service.validateOwnerOrAdmin(maria);
+        service.validateOwnerOrAdmin(user);
 
         // Then
         verify(authenticationService).getAuthenticatedUser();
@@ -188,14 +188,14 @@ class AuthorizationServiceTest {
     @Test
     void shouldValidateOwnerOrAdminWhenUserIsAdmin() {
         // Given
-        User maria = UserFactory.maria();
-        User mariaSilva = UserFactory.mariaSilva();
+        User user = UserFactory.user();
+        User admin = UserFactory.admin();
 
         when(authenticationService.getAuthenticatedUser())
-                .thenReturn(mariaSilva);
+                .thenReturn(admin);
 
         // When
-        service.validateOwnerOrAdmin(maria);
+        service.validateOwnerOrAdmin(user);
 
         // Then
         verify(authenticationService).getAuthenticatedUser();
@@ -204,16 +204,16 @@ class AuthorizationServiceTest {
     @Test
     void shouldThrowExceptionWhenUserIsNotOwnerOrAdmin() {
         // Given
-        User maria = UserFactory.maria();
-        User mariaSilva = UserFactory.mariaSilva();
+        User user = UserFactory.user();
+        User admin = UserFactory.admin();
 
         when(authenticationService.getAuthenticatedUser())
-                .thenReturn(maria);
+                .thenReturn(user);
 
         // When / Then
         assertThrows(
                 ResponseStatusException.class,
-                () -> service.validateOwnerOrAdmin(mariaSilva));
+                () -> service.validateOwnerOrAdmin(admin));
 
         verify(authenticationService).getAuthenticatedUser();
     }

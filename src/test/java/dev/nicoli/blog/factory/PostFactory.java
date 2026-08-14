@@ -10,54 +10,59 @@ public final class PostFactory {
     private PostFactory() { }
 
     public static Post post() {
-        Post post = new Post();
-        post.setId(1L);
-        post.setTitle("I like drama");
-        post.setContent("Content");
-        post.setCategory(CategoryFactory.movies());
-        post.setUser(UserFactory.maria());
-        post.setComments(List.of());
-        return post;
+        return post("I like drama", "Content");
     }
 
     public static Post updatedPost() {
-        Post post = post();
-        post.setTitle("I love drama");
-        post.setContent("Updated content");
-        post.setCategory(CategoryFactory.movies());
-        return post;
+        return post("I love drama", "Updated content");
     }
 
     public static PostCreateRequest createRequest() {
         return new PostCreateRequest(
-                "I like drama",
-                "Content",
-                1L);
+                "I like drama", "Content", 1L);
     }
 
     public static PostUpdateRequest updateRequest() {
         return new PostUpdateRequest(
-                "I love drama",
-                "Updated content",
-                1L);
+                "I love drama", "Updated content", 1L);
     }
 
     public static PostResponse response() {
-        return new PostResponse(
-                1L,
+        return response("I like drama", "Content");
+    }
+
+    public static PostResponse updatedResponse() {
+        return response("I love drama", "Updated content");
+    }
+
+    public static PostViewResponse viewResponse() {
+        return new PostViewResponse(1L,
                 "I like drama",
                 "Content",
                 CategoryFactory.response(),
-                UserFactory.response(),
+                UserFactory.viewResponse(),
+                List.of(),
                 null,
                 null);
     }
 
-    public static PostResponse updatedResponse() {
-        return new PostResponse(
-                1L,
-                "I love drama",
-                "Updated content",
+    private static Post post(
+            String title, String content) {
+        Post post = new Post();
+        post.setId(1L);
+        post.setTitle(title);
+        post.setContent(content);
+        post.setCategory(CategoryFactory.movies());
+        post.setUser(UserFactory.user());
+        post.setComments(List.of());
+        return post;
+    }
+
+    private static PostResponse response(
+            String title, String content) {
+        return new PostResponse(1L,
+                title,
+                content,
                 CategoryFactory.response(),
                 UserFactory.response(),
                 null,

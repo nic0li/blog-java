@@ -51,7 +51,7 @@ class AuthenticationServiceTest {
         LoginRequest request =
                 new LoginRequest("nicoli@email.com", "123456");
 
-        User maria = UserFactory.maria();
+        User user = UserFactory.user();
 
         Authentication authentication = mock(Authentication.class);
 
@@ -60,7 +60,7 @@ class AuthenticationServiceTest {
                 .thenReturn(authentication);
 
         when(authentication.getPrincipal())
-                .thenReturn(new UserDetailsImpl(maria));
+                .thenReturn(new UserDetailsImpl(user));
 
         when(jwtService.generateToken(1L))
                 .thenReturn("jwt-token");
@@ -108,18 +108,18 @@ class AuthenticationServiceTest {
     @Test
     void shouldReturnAuthenticatedUser() {
         // Given
-        User maria = UserFactory.maria();
+        User user = UserFactory.user();
 
         Authentication authentication = mock(Authentication.class);
 
         when(authentication.getPrincipal())
-                .thenReturn(new UserDetailsImpl(maria));
+                .thenReturn(new UserDetailsImpl(user));
 
         SecurityContextHolder.getContext()
                 .setAuthentication(authentication);
 
         when(repository.findById(1L))
-                .thenReturn(Optional.of(maria));
+                .thenReturn(Optional.of(user));
 
         // When
         User authenticatedUser = service.getAuthenticatedUser();

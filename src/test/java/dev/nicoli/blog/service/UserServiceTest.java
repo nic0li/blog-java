@@ -37,14 +37,14 @@ class UserServiceTest {
     void shouldCreateUserSuccessfully() {
         // Given
         UserCreateRequest request = UserFactory.createRequest();
-        User maria = UserFactory.maria();
+        User user = UserFactory.user();
 
         when(repository.findByEmail("maria@email.com"))
                 .thenReturn(Optional.empty());
         when(passwordEncoder.encode("123456"))
                 .thenReturn("encoded-password");
         when(repository.save(any(User.class)))
-                .thenReturn(maria);
+                .thenReturn(user);
 
         // When
         UserResponse response = service.create(request);
@@ -62,10 +62,10 @@ class UserServiceTest {
     void shouldThrowExceptionWhenCreatingUserWithExistingEmail() {
         // Given
         UserCreateRequest request = UserFactory.createRequest();
-        User maria = UserFactory.maria();
+        User user = UserFactory.user();
 
         when(repository.findByEmail("maria@email.com"))
-                .thenReturn(Optional.of(maria));
+                .thenReturn(Optional.of(user));
 
         // When / Then
         assertThrows(
@@ -81,14 +81,14 @@ class UserServiceTest {
     void shouldUpdateUserSuccessfully() {
         // Given
         UserUpdateRequest request = UserFactory.updateRequest();
-        User maria = UserFactory.maria();
+        User user = UserFactory.user();
 
         when(repository.findById(1L))
-                .thenReturn(Optional.of(maria));
+                .thenReturn(Optional.of(user));
         when(repository.findByEmail("mariasilva@email.com"))
                 .thenReturn(Optional.empty());
-        when(repository.save(maria))
-                .thenReturn(maria);
+        when(repository.save(user))
+                .thenReturn(user);
 
         // When
         UserResponse response = service.update(1L, request);
@@ -98,80 +98,120 @@ class UserServiceTest {
         assertEquals(expected, response);
 
         verify(repository).findById(1L);
-        verify(authorizationService).validateOwner(maria);
+        verify(authorizationService).validateOwner(user);
         verify(repository).findByEmail("mariasilva@email.com");
-        verify(repository).save(maria);
+        verify(repository).save(user);
     }
 
     @Test
-    void shouldUpdateUserWithoutChangingEmail() {
+    void shouldUpdateUserWithNullEmail() {
         // Given
-        UserUpdateRequest request = new UserUpdateRequest();
-        request.setEmail(null);
-        request.setName("Maria Silva");
-        request.setPhoto(null);
-        request.setBio("dev");
-        User maria = UserFactory.maria();
+        UserUpdateRequest request = UserFactory.updateRequestNullEmail();
+        User user = UserFactory.user();
 
         when(repository.findById(1L))
-                .thenReturn(Optional.of(maria));
-        when(repository.save(maria))
-                .thenReturn(maria);
+                .thenReturn(Optional.of(user));
+        when(repository.save(user))
+                .thenReturn(user);
 
         // When
         UserResponse response = service.update(1L, request);
 
         // Then
-        UserResponse expected = UserFactory.updatedResponseWithSameEmail();
+        UserResponse expected = UserFactory.updatedResponseSameEmail();
         assertEquals(expected, response);
 
         verify(repository).findById(1L);
-        verify(authorizationService).validateOwner(maria);
+        verify(authorizationService).validateOwner(user);
         verify(repository, never()).findByEmail(any());
-        verify(repository).save(maria);
+        verify(repository).save(user);
     }
 
     @Test
-    void shouldUpdateUserKeepingSameEmail() {
+    void shouldUpdateUserWithSameEmail() {
         // Given
-        UserUpdateRequest request = new UserUpdateRequest();
-        request.setEmail("maria@email.com");
-        request.setName("Maria Silva");
-        request.setPhoto(null);
-        request.setBio("dev");
-        User maria = UserFactory.maria();
+        UserUpdateRequest request = UserFactory.updateRequestSameEmail();
+        User user = UserFactory.user();
 
         when(repository.findById(1L))
-                .thenReturn(Optional.of(maria));
+                .thenReturn(Optional.of(user));
         when(repository.findByEmail("maria@email.com"))
-                .thenReturn(Optional.of(maria));
-        when(repository.save(maria))
-                .thenReturn(maria);
+                .thenReturn(Optional.of(user));
+        when(repository.save(user))
+                .thenReturn(user);
 
         // When
         UserResponse response = service.update(1L, request);
 
         // Then
-        UserResponse expected = UserFactory.updatedResponseWithSameEmail();
+        UserResponse expected = UserFactory.updatedResponseSameEmail();
         assertEquals(expected, response);
 
         verify(repository).findById(1L);
-        verify(authorizationService).validateOwner(maria);
+        verify(authorizationService).validateOwner(user);
         verify(repository).findByEmail("maria@email.com");
-        verify(repository).save(maria);
+        verify(repository).save(user);
+    }
+
+    @Test
+    void shouldUpdateUserWithEmailEmpty() {
+        // Given
+        UserUpdateRequest request = UserFactory.updateRequestEmailEmpty();
+        User user = UserFactory.user();
+
+        when(repository.findById(1L))
+                .thenReturn(Optional.of(user));
+        when(repository.save(user))
+                .thenReturn(user);
+
+        // When
+        UserResponse response = service.update(1L, request);
+
+        // Then
+        UserResponse expected = UserFactory.updatedResponseSameEmail();
+        assertEquals(expected, response);
+
+        verify(repository).findById(1L);
+        verify(authorizationService).validateOwner(user);
+        verify(repository, never()).findByEmail(any());
+        verify(repository).save(user);
+    }
+
+    @Test
+    void shouldUpdateUserWithoutEmailField() {
+        // Given
+        UserUpdateRequest request = UserFactory.updateRequestWithoutEmail();
+        User user = UserFactory.user();
+
+        when(repository.findById(1L))
+                .thenReturn(Optional.of(user));
+        when(repository.save(user))
+                .thenReturn(user);
+
+        // When
+        UserResponse response = service.update(1L, request);
+
+        // Then
+        UserResponse expected = UserFactory.updatedResponseSameEmail();
+        assertEquals(expected, response);
+
+        verify(repository).findById(1L);
+        verify(authorizationService).validateOwner(user);
+        verify(repository, never()).findByEmail(any());
+        verify(repository).save(user);
     }
 
     @Test
     void shouldThrowExceptionWhenUpdatingWithExistingEmail() {
         // Given
         UserUpdateRequest request = UserFactory.updateRequest();
-        User maria = UserFactory.maria();
-        User mariaSilva = UserFactory.mariaSilva();
+        User user = UserFactory.user();
+        User admin = UserFactory.admin();
 
         when(repository.findById(1L))
-                .thenReturn(Optional.of(maria));
+                .thenReturn(Optional.of(user));
         when(repository.findByEmail("mariasilva@email.com"))
-                .thenReturn(Optional.of(mariaSilva));
+                .thenReturn(Optional.of(admin));
 
         // When / Then
         assertThrows(
@@ -179,7 +219,7 @@ class UserServiceTest {
                 () -> service.update(1L, request));
 
         verify(repository).findById(1L);
-        verify(authorizationService).validateOwner(maria);
+        verify(authorizationService).validateOwner(user);
         verify(repository).findByEmail("mariasilva@email.com");
         verify(repository, never()).save(any());
     }
@@ -187,11 +227,11 @@ class UserServiceTest {
     @Test
     void shouldReturnAllUsers() {
         // Given
-        User maria = UserFactory.maria();
-        User mariaSilva = UserFactory.mariaSilva();
+        User user = UserFactory.user();
+        User admin = UserFactory.admin();
 
         when(repository.findAll())
-                .thenReturn(List.of(maria, mariaSilva));
+                .thenReturn(List.of(user, admin));
 
         // When
         List<UserViewResponse> response = service.findAll();
@@ -199,7 +239,7 @@ class UserServiceTest {
         // Then
         assertEquals(2, response.size());
         assertEquals("Maria", response.getFirst().name());
-        assertEquals("Maria Silva", response.getLast().name());
+        assertEquals("Ana", response.getLast().name());
 
         verify(repository).findAll();
     }
@@ -222,10 +262,10 @@ class UserServiceTest {
     @Test
     void shouldReturnUserById() {
         // Given
-        User maria = UserFactory.maria();
+        User user = UserFactory.user();
 
         when(repository.findById(1L))
-                .thenReturn(Optional.of(maria));
+                .thenReturn(Optional.of(user));
 
         // When
         UserViewResponse response = service.findById(1L);
@@ -254,10 +294,10 @@ class UserServiceTest {
     @Test
     void shouldReturnAuthenticatedUser() {
         // Given
-        User maria = UserFactory.maria();
+        User user = UserFactory.user();
 
         when(authorizationService.getAuthenticatedUser())
-                .thenReturn(maria);
+                .thenReturn(user);
 
         // When
         UserResponse response = service.findMe();
@@ -273,14 +313,14 @@ class UserServiceTest {
     void shouldUpdateAuthenticatedUserSuccessfully() {
         // Given
         UserUpdateRequest request = UserFactory.updateRequest();
-        User maria = UserFactory.maria();
+        User user = UserFactory.user();
 
         when(authorizationService.getAuthenticatedUser())
-                .thenReturn(maria);
+                .thenReturn(user);
         when(repository.findByEmail("mariasilva@email.com"))
                 .thenReturn(Optional.empty());
-        when(repository.save(maria))
-                .thenReturn(maria);
+        when(repository.save(user))
+                .thenReturn(user);
 
         // When
         UserResponse response = service.updateMe(request);
@@ -291,20 +331,20 @@ class UserServiceTest {
 
         verify(authorizationService).getAuthenticatedUser();
         verify(repository).findByEmail("mariasilva@email.com");
-        verify(repository).save(maria);
+        verify(repository).save(user);
     }
 
     @Test
     void shouldThrowExceptionWhenUpdatingAuthenticatedUserWithExistingEmail() {
         // Given
         UserUpdateRequest request = UserFactory.updateRequest();
-        User maria = UserFactory.maria();
-        User mariaSilva = UserFactory.mariaSilva();
+        User user = UserFactory.user();
+        User admin = UserFactory.admin();
 
         when(authorizationService.getAuthenticatedUser())
-                .thenReturn(maria);
+                .thenReturn(user);
         when(repository.findByEmail("mariasilva@email.com"))
-                .thenReturn(Optional.of(mariaSilva));
+                .thenReturn(Optional.of(admin));
 
         // When / Then
         assertThrows(
@@ -319,18 +359,18 @@ class UserServiceTest {
     @Test
     void shouldDeleteUser() {
         // Given
-        User maria = UserFactory.maria();
+        User user = UserFactory.user();
 
         when(repository.findById(1L))
-                .thenReturn(Optional.of(maria));
+                .thenReturn(Optional.of(user));
 
         // When
         service.delete(1L);
 
         // Then
         verify(repository).findById(1L);
-        verify(authorizationService).validateOwnerOrAdmin(maria);
-        verify(repository).delete(maria);
+        verify(authorizationService).validateOwnerOrAdmin(user);
+        verify(repository).delete(user);
     }
 
     @Test
@@ -351,17 +391,17 @@ class UserServiceTest {
     @Test
     void shouldDeleteAuthenticatedUser() {
         // Given
-        User maria = UserFactory.maria();
+        User user = UserFactory.user();
 
         when(authorizationService.getAuthenticatedUser())
-                .thenReturn(maria);
+                .thenReturn(user);
 
         // When
         service.deleteMe();
 
         // Then
         verify(authorizationService).getAuthenticatedUser();
-        verify(repository).delete(maria);
+        verify(repository).delete(user);
     }
 
 }

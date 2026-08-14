@@ -44,7 +44,7 @@ class CommentServiceTest {
         when(postService.getById(1L))
                 .thenReturn(PostFactory.post());
         when(authorizationService.getAuthenticatedUser())
-                .thenReturn(UserFactory.maria());
+                .thenReturn(UserFactory.user());
         when(repository.save(any(Comment.class)))
                 .thenReturn(comment);
 
@@ -96,9 +96,8 @@ class CommentServiceTest {
         List<CommentViewResponse> response = service.findAll();
 
         // Then
-        assertEquals(1, response.size());
-        assertEquals(comment.getId(), response.getFirst().id());
-        assertEquals(comment.getContent(), response.getFirst().content());
+        List<CommentViewResponse> expected = List.of(CommentFactory.viewResponse());
+        assertEquals(expected, List.of(response.getFirst()));
 
         verify(repository).findAll();
     }
@@ -131,7 +130,6 @@ class CommentServiceTest {
 
         // Then
         CommentViewResponse expected = CommentFactory.viewResponse();
-
         assertEquals(expected, response);
 
         verify(repository).findById(1L);

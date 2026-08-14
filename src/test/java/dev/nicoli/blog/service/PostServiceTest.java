@@ -43,7 +43,7 @@ class PostServiceTest {
         when(categoryService.getById(1L))
                 .thenReturn(CategoryFactory.movies());
         when(authorizationService.getAuthenticatedUser())
-                .thenReturn(UserFactory.maria());
+                .thenReturn(UserFactory.user());
         when(repository.save(any(Post.class)))
                 .thenReturn(post);
 
@@ -91,23 +91,24 @@ class PostServiceTest {
         // Given
         PostUpdateRequest request = new PostUpdateRequest(null, null, null);
         Post post = PostFactory.post();
+        Post updatedPost = PostFactory.updatedPost();
 
         when(repository.findById(1L))
                 .thenReturn(Optional.of(post));
         when(repository.save(post))
-                .thenReturn(post);
+                .thenReturn(updatedPost);
 
         // When
         PostResponse response = service.update(1L, request);
 
         // Then
-        PostResponse expected = PostFactory.response();
+        PostResponse expected = PostFactory.updatedResponse();
         assertEquals(expected, response);
 
         verify(repository).findById(1L);
         verify(authorizationService).validateOwner(post.getUser());
-        verify(repository).save(post);
         verify(categoryService, never()).getById(any());
+        verify(repository).save(post);
     }
 
     @Test
@@ -123,8 +124,8 @@ class PostServiceTest {
                 service.findAll(new PostFiltersRequest(null, null));
 
         // Then
-        assertEquals(1, response.size());
-        assertEquals(post.getId(), response.getFirst().id());
+        List<PostViewResponse> expected = List.of(PostFactory.viewResponse());
+        assertEquals(expected, List.of(response.getFirst()));
 
         verify(repository).findAll();
     }
@@ -142,8 +143,8 @@ class PostServiceTest {
                 service.findAll(new PostFiltersRequest("Like", null));
 
         // Then
-        assertEquals(1, response.size());
-        assertEquals(post.getId(), response.getFirst().id());
+        List<PostViewResponse> expected = List.of(PostFactory.viewResponse());
+        assertEquals(expected, List.of(response.getFirst()));
 
         verify(repository)
                 .findAllByTitleContainingIgnoreCase("Like");
@@ -162,8 +163,8 @@ class PostServiceTest {
                 service.findAll(new PostFiltersRequest(null, "Movies"));
 
         // Then
-        assertEquals(1, response.size());
-        assertEquals(post.getId(), response.getFirst().id());
+        List<PostViewResponse> expected = List.of(PostFactory.viewResponse());
+        assertEquals(expected, List.of(response.getFirst()));
 
         verify(repository)
                 .findAllByCategoryNameContainingIgnoreCase("Movies");
@@ -185,8 +186,8 @@ class PostServiceTest {
                 service.findAll(new PostFiltersRequest("Like", "Movies"));
 
         // Then
-        assertEquals(1, response.size());
-        assertEquals(post.getId(), response.getFirst().id());
+        List<PostViewResponse> expected = List.of(PostFactory.viewResponse());
+        assertEquals(expected, List.of(response.getFirst()));
 
         verify(repository)
                 .findAllByTitleContainingIgnoreCaseAndCategoryNameContainingIgnoreCase(
@@ -206,8 +207,8 @@ class PostServiceTest {
         List<PostViewResponse> response = service.findByUser(1L);
 
         // Then
-        assertEquals(1, response.size());
-        assertEquals(post.getId(), response.getFirst().id());
+        List<PostViewResponse> expected = List.of(PostFactory.viewResponse());
+        assertEquals(expected, List.of(response.getFirst()));
 
         verify(repository).findAllByUserId(1L);
     }
@@ -218,7 +219,7 @@ class PostServiceTest {
         Post post = PostFactory.post();
 
         when(authorizationService.getAuthenticatedUser())
-                .thenReturn(UserFactory.maria());
+                .thenReturn(UserFactory.user());
 
         when(repository.findAllByUserId(1L))
                 .thenReturn(List.of(post));
@@ -228,8 +229,8 @@ class PostServiceTest {
                 service.findByAuthenticatedUser();
 
         // Then
-        assertEquals(1, response.size());
-        assertEquals(post.getId(), response.getFirst().id());
+        List<PostViewResponse> expected = List.of(PostFactory.viewResponse());
+        assertEquals(expected, List.of(response.getFirst()));
 
         verify(authorizationService).getAuthenticatedUser();
         verify(repository).findAllByUserId(1L);
@@ -247,7 +248,8 @@ class PostServiceTest {
         PostViewResponse response = service.findById(1L);
 
         // Then
-        assertEquals(post.getId(), response.id());
+        PostViewResponse expected = PostFactory.viewResponse();
+        assertEquals(expected, response);
 
         verify(repository).findById(1L);
     }

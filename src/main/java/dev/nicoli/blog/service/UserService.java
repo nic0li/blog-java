@@ -95,9 +95,6 @@ public class UserService extends AbstractCrudService<User,
     }
 
     private void validateEmailAvailability(String email, Long userId) {
-        if (email == null || email.isBlank()) {
-            return;
-        }
         var userByEmail = repository.findByEmail(email);
         boolean emailAlreadyExists = userByEmail.isPresent();
         boolean emailBelongsToAnotherUser = emailAlreadyExists
