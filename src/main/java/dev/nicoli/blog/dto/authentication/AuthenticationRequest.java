@@ -1,6 +1,6 @@
 package dev.nicoli.blog.dto.authentication;
 
-public record LoginRequest(
+public record AuthenticationRequest(
 
         String login,
 

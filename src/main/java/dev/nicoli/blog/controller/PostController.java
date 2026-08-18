@@ -1,7 +1,7 @@
 package dev.nicoli.blog.controller;
 
 import dev.nicoli.blog.dto.post.*;
-import dev.nicoli.blog.service.interfaces.*;
+import dev.nicoli.blog.service.PostService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springdoc.core.annotations.ParameterObject;

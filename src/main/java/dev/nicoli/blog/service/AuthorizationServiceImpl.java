@@ -2,7 +2,6 @@ package dev.nicoli.blog.service;
 
 import dev.nicoli.blog.common.enums.UserRole;
 import dev.nicoli.blog.entity.User;
-import dev.nicoli.blog.service.interfaces.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;

@@ -41,20 +41,6 @@ public final class UserFactory {
         return userUpdateRequest();
     }
 
-    private static UserUpdateRequest userUpdateRequest(String email) {
-        UserUpdateRequest request = userUpdateRequest();
-        request.setEmail(email);
-        return request;
-    }
-
-    private static UserUpdateRequest userUpdateRequest() {
-        UserUpdateRequest request = new UserUpdateRequest();
-        request.setName("Maria Silva");
-        request.setPhoto(null);
-        request.setBio("dev");
-        return request;
-    }
-
     public static UserResponse response() {
         return userResponse("maria@email.com", "Maria", null);
     }
@@ -80,6 +66,20 @@ public final class UserFactory {
         user.setName(name);
         user.setRole(role);
         return user;
+    }
+
+    private static UserUpdateRequest userUpdateRequest(String email) {
+        UserUpdateRequest request = userUpdateRequest();
+        request.setEmail(email);
+        return request;
+    }
+
+    private static UserUpdateRequest userUpdateRequest() {
+        UserUpdateRequest request = new UserUpdateRequest();
+        request.setName("Maria Silva");
+        request.setPhoto(null);
+        request.setBio("dev");
+        return request;
     }
 
     private static UserResponse userResponse(

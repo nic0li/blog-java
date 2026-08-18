@@ -1,5 +1,7 @@
-package dev.nicoli.blog.security;
+package dev.nicoli.blog.config;
 
+import dev.nicoli.blog.security.JwtAuthFilter;
+import dev.nicoli.blog.security.UserDetailsServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

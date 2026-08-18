@@ -2,7 +2,8 @@ package dev.nicoli.blog.controller;
 
 import dev.nicoli.blog.dto.post.*;
 import dev.nicoli.blog.dto.user.*;
-import dev.nicoli.blog.service.interfaces.*;
+import dev.nicoli.blog.service.PostService;
+import dev.nicoli.blog.service.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;

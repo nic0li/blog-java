@@ -5,7 +5,6 @@ import dev.nicoli.blog.entity.User;
 import dev.nicoli.blog.mapper.UserMapper;
 import dev.nicoli.blog.repository.UserRepository;
 import dev.nicoli.blog.security.*;
-import dev.nicoli.blog.service.interfaces.AuthenticationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,7 +31,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     }
 
     @Override
-    public LoginResponse authenticate(LoginRequest request) {
+    public AuthenticationResponse authenticate(AuthenticationRequest request) {
         Authentication authentication =
                 authenticationManager.authenticate(
                         new UsernamePasswordAuthenticationToken(
@@ -43,7 +42,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         String token = jwtService.generateToken(user.getId());
 
-        return new LoginResponse(UserMapper.toResponse(user), token);
+        return new AuthenticationResponse(UserMapper.toResponse(user), token);
     }
 
     @Override

@@ -4,7 +4,6 @@ import dev.nicoli.blog.dto.comment.*;
 import dev.nicoli.blog.entity.Comment;
 import dev.nicoli.blog.factory.*;
 import dev.nicoli.blog.repository.CommentRepository;
-import dev.nicoli.blog.service.interfaces.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

@@ -1,4 +1,4 @@
-package dev.nicoli.blog.service.interfaces;
+package dev.nicoli.blog.service;
 
 import dev.nicoli.blog.common.service.CrudService;
 import dev.nicoli.blog.dto.user.*;

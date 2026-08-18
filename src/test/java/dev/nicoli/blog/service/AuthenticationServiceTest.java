@@ -46,8 +46,8 @@ class AuthenticationServiceTest {
     @Test
     void shouldAuthenticateSuccessfully() {
         // Given
-        LoginRequest request =
-                new LoginRequest("nicoli@email.com", "123456");
+        AuthenticationRequest request =
+                new AuthenticationRequest("maria@email.com", "123456");
 
         User user = UserFactory.user();
 
@@ -64,7 +64,7 @@ class AuthenticationServiceTest {
                 .thenReturn("jwt-token");
 
         // When
-        LoginResponse response = service.authenticate(request);
+        AuthenticationResponse response = service.authenticate(request);
 
         // Then
         assertEquals(1L, response.user().id());
@@ -83,16 +83,15 @@ class AuthenticationServiceTest {
     @Test
     void shouldThrowExceptionWhenAuthenticationFails() {
         // Given
-        LoginRequest request =
-                new LoginRequest("maria@email.com", "123456");
+        AuthenticationRequest request =
+                new AuthenticationRequest("maria@email.com", "123456");
 
         when(authenticationManager.authenticate(any(
                 UsernamePasswordAuthenticationToken.class)))
                 .thenThrow(new BadCredentialsException("Bad credentials"));
 
         // When / Then
-        assertThrows(
-                BadCredentialsException.class,
+        assertThrows(BadCredentialsException.class,
                 () -> service.authenticate(request));
 
         verify(authenticationManager)
@@ -132,8 +131,7 @@ class AuthenticationServiceTest {
     @Test
     void shouldThrowExceptionWhenUserIsNotAuthenticated() {
         // Given / When / Then
-        assertThrows(
-                ResponseStatusException.class,
+        assertThrows(ResponseStatusException.class,
                 () -> service.getAuthenticatedUser());
 
         verifyNoInteractions(repository);

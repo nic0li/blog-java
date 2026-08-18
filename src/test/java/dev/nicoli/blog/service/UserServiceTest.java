@@ -4,7 +4,6 @@ import dev.nicoli.blog.dto.user.*;
 import dev.nicoli.blog.entity.User;
 import dev.nicoli.blog.factory.UserFactory;
 import dev.nicoli.blog.repository.UserRepository;
-import dev.nicoli.blog.service.interfaces.AuthorizationService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -69,8 +68,7 @@ class UserServiceTest {
                 .thenReturn(Optional.of(user));
 
         // When / Then
-        assertThrows(
-                ResponseStatusException.class,
+        assertThrows(ResponseStatusException.class,
                 () -> service.create(request));
 
         verify(repository).findByEmail("maria@email.com");
@@ -215,8 +213,7 @@ class UserServiceTest {
                 .thenReturn(Optional.of(admin));
 
         // When / Then
-        assertThrows(
-                ResponseStatusException.class,
+        assertThrows(ResponseStatusException.class,
                 () -> service.update(1L, request));
 
         verify(repository).findById(1L);
@@ -285,8 +282,7 @@ class UserServiceTest {
                 .thenReturn(Optional.empty());
 
         // When / Then
-        assertThrows(
-                ResponseStatusException.class,
+        assertThrows(ResponseStatusException.class,
                 () -> service.findById(1L));
 
         verify(repository).findById(1L);
@@ -348,8 +344,7 @@ class UserServiceTest {
                 .thenReturn(Optional.of(admin));
 
         // When / Then
-        assertThrows(
-                ResponseStatusException.class,
+        assertThrows(ResponseStatusException.class,
                 () -> service.updateMe(request));
 
         verify(authorizationService).getAuthenticatedUser();
@@ -381,8 +376,7 @@ class UserServiceTest {
                 .thenReturn(Optional.empty());
 
         // When / Then
-        assertThrows(
-                ResponseStatusException.class,
+        assertThrows(ResponseStatusException.class,
                 () -> service.delete(1L));
 
         verify(repository).findById(1L);

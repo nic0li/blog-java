@@ -4,7 +4,6 @@ import dev.nicoli.blog.dto.post.*;
 import dev.nicoli.blog.entity.Post;
 import dev.nicoli.blog.factory.*;
 import dev.nicoli.blog.repository.PostRepository;
-import dev.nicoli.blog.service.interfaces.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;

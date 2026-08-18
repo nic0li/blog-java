@@ -2,7 +2,8 @@ package dev.nicoli.blog.controller;
 
 import dev.nicoli.blog.dto.authentication.*;
 import dev.nicoli.blog.dto.user.*;
-import dev.nicoli.blog.service.interfaces.*;
+import dev.nicoli.blog.service.AuthenticationService;
+import dev.nicoli.blog.service.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
@@ -27,8 +28,8 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> authenticate(
-            @RequestBody LoginRequest request) {
+    public ResponseEntity<AuthenticationResponse> authenticate(
+            @RequestBody AuthenticationRequest request) {
         return ResponseEntity.ok(service.authenticate(request));
     }
 

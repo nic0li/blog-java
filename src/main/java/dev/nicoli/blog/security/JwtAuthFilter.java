@@ -50,7 +50,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             String token = authHeader.substring(7);
 
-            Long userId = jwtService.extractUserId(token);
+            Long userId = Long.parseLong(jwtService.extractUser(token));
 
             UserDetailsImpl userDetails =
                     userDetailsService.loadUserById(userId);

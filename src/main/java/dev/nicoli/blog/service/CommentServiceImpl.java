@@ -5,7 +5,6 @@ import dev.nicoli.blog.dto.comment.*;
 import dev.nicoli.blog.entity.Comment;
 import dev.nicoli.blog.mapper.CommentMapper;
 import dev.nicoli.blog.repository.CommentRepository;
-import dev.nicoli.blog.service.interfaces.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

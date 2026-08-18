@@ -5,7 +5,6 @@ import dev.nicoli.blog.dto.post.*;
 import dev.nicoli.blog.entity.Post;
 import dev.nicoli.blog.mapper.PostMapper;
 import dev.nicoli.blog.repository.PostRepository;
-import dev.nicoli.blog.service.interfaces.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

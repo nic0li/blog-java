@@ -2,7 +2,6 @@ package dev.nicoli.blog.service;
 
 import dev.nicoli.blog.entity.User;
 import dev.nicoli.blog.factory.UserFactory;
-import dev.nicoli.blog.service.interfaces.AuthenticationService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -133,8 +132,7 @@ class AuthorizationServiceTest {
                 .thenReturn(user);
 
         // When / Then
-        assertThrows(
-                ResponseStatusException.class,
+        assertThrows(ResponseStatusException.class,
                 () -> service.validateOwner(admin));
 
         verify(authenticationService).getAuthenticatedUser();
@@ -164,8 +162,7 @@ class AuthorizationServiceTest {
                 .thenReturn(user);
 
         // When / Then
-        assertThrows(
-                ResponseStatusException.class,
+        assertThrows(ResponseStatusException.class,
                 () -> service.validateAdmin());
 
         verify(authenticationService).getAuthenticatedUser();
@@ -212,8 +209,7 @@ class AuthorizationServiceTest {
                 .thenReturn(user);
 
         // When / Then
-        assertThrows(
-                ResponseStatusException.class,
+        assertThrows(ResponseStatusException.class,
                 () -> service.validateOwnerOrAdmin(admin));
 
         verify(authenticationService).getAuthenticatedUser();

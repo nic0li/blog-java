@@ -5,7 +5,6 @@ import dev.nicoli.blog.dto.category.*;
 import dev.nicoli.blog.entity.Category;
 import dev.nicoli.blog.mapper.CategoryMapper;
 import dev.nicoli.blog.repository.CategoryRepository;
-import dev.nicoli.blog.service.interfaces.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
