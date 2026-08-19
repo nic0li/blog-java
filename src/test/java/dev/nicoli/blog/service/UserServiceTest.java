@@ -1,5 +1,6 @@
 package dev.nicoli.blog.service;
 
+import dev.nicoli.blog.common.enums.UserRole;
 import dev.nicoli.blog.dto.user.*;
 import dev.nicoli.blog.entity.User;
 import dev.nicoli.blog.factory.UserFactory;
@@ -397,6 +398,159 @@ class UserServiceTest {
         // Then
         verify(authorizationService).getAuthenticatedUser();
         verify(repository).delete(user);
+    }
+
+    @Test
+    void shouldUpdatePasswordSuccessfully() {
+        // Given
+        UserPasswordUpdateRequest request =
+                new UserPasswordUpdateRequest("123456", "654321");
+        User user = UserFactory.user();
+
+        when(authorizationService.getAuthenticatedUser())
+                .thenReturn(user);
+
+        when(passwordEncoder.matches("123456", user.getPassword()))
+                .thenReturn(true);
+
+        when(passwordEncoder.encode("654321"))
+                .thenReturn("new-hashed-password");
+
+        when(repository.save(user))
+                .thenReturn(user);
+
+        // When
+        service.updatePassword(request);
+
+        // Then
+        assertEquals("new-hashed-password", user.getPassword());
+
+        verify(authorizationService).getAuthenticatedUser();
+        verify(passwordEncoder).matches("123456", "123456");
+        verify(passwordEncoder).encode("654321");
+        verify(repository).save(user);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenCurrentPasswordIsInvalid() {
+        // Given
+        UserPasswordUpdateRequest request =
+                new UserPasswordUpdateRequest("wrong-password", "654321");
+        User user = UserFactory.user();
+
+        when(authorizationService.getAuthenticatedUser())
+                .thenReturn(user);
+
+        when(passwordEncoder.matches("wrong-password", user.getPassword()))
+                .thenReturn(false);
+
+        // When / Then
+        assertThrows(ResponseStatusException.class,
+                () -> service.updatePassword(request));
+
+        verify(authorizationService).getAuthenticatedUser();
+        verify(passwordEncoder).matches("wrong-password", "123456");
+        verify(passwordEncoder, never()).encode(anyString());
+        verify(repository, never()).save(any());
+    }
+
+    @Test
+    void shouldPromoteUserToAdmin() {
+        // Given
+        User admin = UserFactory.admin();
+        User user = UserFactory.user();
+
+        when(authorizationService.getAuthenticatedUser())
+                .thenReturn(admin);
+
+        when(repository.findById(1L))
+                .thenReturn(Optional.of(user));
+
+        when(repository.save(user))
+                .thenReturn(user);
+
+        // When
+        UserResponse response = service.toggleRole(1L);
+
+        // Then
+        assertEquals(UserRole.ADMIN, user.getRole());
+        assertEquals(UserRole.ADMIN, response.role());
+
+        verify(authorizationService).validateAdmin();
+        verify(authorizationService).getAuthenticatedUser();
+        verify(repository).findById(1L);
+        verify(repository).save(user);
+    }
+
+    @Test
+    void shouldDemoteAdminToUser() {
+        // Given
+        User authenticatedAdmin = UserFactory.admin();
+
+        User targetAdmin = UserFactory.admin();
+        targetAdmin.setId(3L);
+
+        when(authorizationService.getAuthenticatedUser())
+                .thenReturn(authenticatedAdmin);
+
+        when(repository.findById(3L))
+                .thenReturn(Optional.of(targetAdmin));
+
+        when(repository.save(targetAdmin))
+                .thenReturn(targetAdmin);
+
+        // When
+        UserResponse response = service.toggleRole(3L);
+
+        // Then
+        assertEquals(UserRole.USER, targetAdmin.getRole());
+        assertEquals(UserRole.USER, response.role());
+
+        verify(authorizationService).validateAdmin();
+        verify(authorizationService).getAuthenticatedUser();
+        verify(repository).findById(3L);
+        verify(repository).save(targetAdmin);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenAdminChangesOwnRole() {
+        // Given
+        User admin = UserFactory.admin();
+
+        when(authorizationService.getAuthenticatedUser())
+                .thenReturn(admin);
+
+        when(repository.findById(admin.getId()))
+                .thenReturn(Optional.of(admin));
+
+        // When / Then
+        assertThrows(ResponseStatusException.class,
+                () -> service.toggleRole(admin.getId()));
+
+        verify(authorizationService).validateAdmin();
+        verify(authorizationService).getAuthenticatedUser();
+        verify(repository).findById(admin.getId());
+        verify(repository, never()).save(any());
+    }
+
+    @Test
+    void shouldThrowExceptionWhenUserToChangeRoleIsNotFound() {
+        // Given
+        User admin = UserFactory.admin();
+
+        when(authorizationService.getAuthenticatedUser())
+                .thenReturn(admin);
+
+        when(repository.findById(999L))
+                .thenReturn(Optional.empty());
+
+        // When / Then
+        assertThrows(ResponseStatusException.class,
+                () -> service.toggleRole(999L));
+        verify(authorizationService).validateAdmin();
+        verify(authorizationService).getAuthenticatedUser();
+        verify(repository).findById(999L);
+        verify(repository, never()).save(any());
     }
 
 }

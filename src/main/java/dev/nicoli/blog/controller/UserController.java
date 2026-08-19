@@ -72,6 +72,21 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
+    @PatchMapping("/me/password")
+    public ResponseEntity<Void> updatePassword(
+            @RequestBody UserPasswordUpdateRequest request) {
+
+        service.updatePassword(request);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/role")
+    public ResponseEntity<UserResponse> toggleRole(
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(service.toggleRole(id));
+    }
+
     @GetMapping("/{id}/posts")
     public ResponseEntity<List<PostViewResponse>> findPostsByUser(
             @PathVariable Long id) {

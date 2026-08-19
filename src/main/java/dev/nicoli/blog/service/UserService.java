@@ -15,4 +15,8 @@ public interface UserService extends CrudService<
     UserResponse updateMe(UserUpdateRequest request);
 
     void deleteMe();
+
+    void updatePassword(UserPasswordUpdateRequest request);
+
+    UserResponse toggleRole(Long id);
 }

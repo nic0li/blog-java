@@ -85,6 +85,36 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         repository.delete(user);
     }
 
+    @Override
+    public void updatePassword(UserPasswordUpdateRequest request) {
+        User user = authorizationService.getAuthenticatedUser();
+        if (!passwordEncoder.matches(
+                request.currentPassword(),
+                user.getPassword())) {
+
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Invalid current password");
+        }
+        user.setPassword(passwordEncoder.encode(request.newPassword()));
+        repository.save(user);
+    }
+
+    @Override
+    public UserResponse toggleRole(Long id) {
+        authorizationService.validateAdmin();
+        User authenticatedUser = authorizationService.getAuthenticatedUser();
+        User user = getById(id);
+        if (authenticatedUser.getId().equals(user.getId())) {
+            throw new ResponseStatusException(
+                    HttpStatus.BAD_REQUEST,
+                    "You cannot change your own role");
+        }
+        UserRole role = user.getRole() == UserRole.ADMIN
+                ? UserRole.USER : UserRole.ADMIN;
+        user.setRole(role);
+        return UserMapper.toResponse(repository.save(user));
+    }
+
     private UserResponse updateUserResponse(UserUpdateRequest request, User user) {
         if (request.isEmailProvided()
                 && request.getEmail() != null && !request.getEmail().isBlank()) {
