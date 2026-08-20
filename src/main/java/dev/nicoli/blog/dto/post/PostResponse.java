@@ -8,22 +8,13 @@ import java.time.Instant;
 import java.util.List;
 
 public record PostResponse(
-
         Long id,
-
         String title,
-
         String content,
-
         Instant createdAt,
-
         Instant updatedAt,
-
         CategoryResponse category,
-
         UserProfileResponse user,
-
         List<CommentResponse> comments
-
 ) {
 }
