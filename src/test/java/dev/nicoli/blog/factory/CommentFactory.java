@@ -29,14 +29,6 @@ public final class CommentFactory {
         return response("Updated comment!");
     }
 
-    public static CommentViewResponse viewResponse() {
-        return new CommentViewResponse(1L,
-                "Great post!",
-                UserFactory.viewResponse(),
-                null,
-                null);
-    }
-
     private static Comment comment(String content) {
         Comment comment = new Comment();
         comment.setId(1L);
@@ -49,8 +41,9 @@ public final class CommentFactory {
     private static CommentResponse response(String content) {
         return new CommentResponse(1L,
                 content,
-                UserFactory.response(),
                 null,
-                null);
+                null,
+                UserFactory.profileResponse(),
+                PostFactory.response());
     }
 }

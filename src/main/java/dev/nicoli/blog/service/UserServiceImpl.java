@@ -48,15 +48,15 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
     }
 
     @Override
-    public UserViewResponse findById(Long id) {
-        return UserMapper.toViewResponse(getById(id));
+    public UserProfileResponse findById(Long id) {
+        return UserMapper.toProfileResponse(getById(id));
     }
 
     @Override
-    public List<UserViewResponse> findAll() {
+    public List<UserProfileResponse> findAll() {
         return repository.findAll()
                 .stream()
-                .map(UserMapper::toViewResponse)
+                .map(UserMapper::toProfileResponse)
                 .toList();
     }
 

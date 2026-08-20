@@ -44,8 +44,8 @@ public final class UserMapper {
                 user.getRole());
     }
 
-    public static UserViewResponse toViewResponse(User user) {
-        return new UserViewResponse(user.getId(),
+    public static UserProfileResponse toProfileResponse(User user) {
+        return new UserProfileResponse(user.getId(),
                 user.getName(),
                 user.getPhoto(),
                 user.getBio());

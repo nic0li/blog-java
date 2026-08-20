@@ -25,13 +25,13 @@ public class PostController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PostViewResponse>> findAll(
+    public ResponseEntity<List<PostResponse>> findAll(
             @ModelAttribute @ParameterObject PostFiltersRequest filters) {
         return ResponseEntity.ok(service.findAll(filters));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostViewResponse> findById(@PathVariable Long id) {
+    public ResponseEntity<PostResponse> findById(@PathVariable Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 

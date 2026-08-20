@@ -1,6 +1,6 @@
 package dev.nicoli.blog.dto.user;
 
-public record UserViewResponse(
+public record UserProfileResponse(
 
         Long id,
 

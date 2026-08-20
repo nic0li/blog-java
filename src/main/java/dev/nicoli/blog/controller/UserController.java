@@ -31,12 +31,12 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserViewResponse>> findAll() {
+    public ResponseEntity<List<UserProfileResponse>> findAll() {
         return ResponseEntity.ok(service.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserViewResponse> findById(@PathVariable Long id) {
+    public ResponseEntity<UserProfileResponse> findById(@PathVariable Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
@@ -80,14 +80,14 @@ public class UserController {
     }
 
     @GetMapping("/{id}/posts")
-    public ResponseEntity<List<PostViewResponse>> findPostsByUser(
+    public ResponseEntity<List<PostResponse>> findPostsByUser(
             @PathVariable Long id) {
         return ResponseEntity.ok(
                 postService.findByUser(id));
     }
 
     @GetMapping("/me/posts")
-    public ResponseEntity<List<PostViewResponse>> findAuthenticatedUserPosts() {
+    public ResponseEntity<List<PostResponse>> findAuthenticatedUserPosts() {
         return ResponseEntity.ok(
                 postService.findByAuthenticatedUser());
     }

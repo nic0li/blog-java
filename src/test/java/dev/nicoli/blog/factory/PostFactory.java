@@ -33,17 +33,6 @@ public final class PostFactory {
         return response("I love drama", "Updated content");
     }
 
-    public static PostViewResponse viewResponse() {
-        return new PostViewResponse(1L,
-                "I like drama",
-                "Content",
-                CategoryFactory.response(),
-                UserFactory.viewResponse(),
-                List.of(),
-                null,
-                null);
-    }
-
     private static Post post(
             String title, String content) {
         Post post = new Post();
@@ -61,9 +50,10 @@ public final class PostFactory {
         return new PostResponse(1L,
                 title,
                 content,
-                CategoryFactory.response(),
-                UserFactory.response(),
                 null,
-                null);
+                null,
+                CategoryFactory.response(),
+                UserFactory.profileResponse(),
+                List.of());
     }
 }

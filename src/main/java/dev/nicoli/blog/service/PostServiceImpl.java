@@ -56,30 +56,30 @@ public class PostServiceImpl extends CrudServiceImpl<Post> implements PostServic
 
     @Transactional(readOnly = true)
     @Override
-    public PostViewResponse findById(Long id) {
-        return PostMapper.toViewResponse(getById(id));
+    public PostResponse findById(Long id) {
+        return PostMapper.toResponse(getById(id));
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<PostViewResponse> findAll(PostFiltersRequest request) {
+    public List<PostResponse> findAll(PostFiltersRequest request) {
         return findPosts(request).stream()
-                .map(PostMapper::toViewResponse).toList();
+                .map(PostMapper::toResponse).toList();
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<PostViewResponse> findByUser(Long id) {
+    public List<PostResponse> findByUser(Long id) {
         return repository.findAllByUserId(id).stream()
-                .map(PostMapper::toViewResponse).toList();
+                .map(PostMapper::toResponse).toList();
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<PostViewResponse> findByAuthenticatedUser() {
+    public List<PostResponse> findByAuthenticatedUser() {
         var user = authorizationService.getAuthenticatedUser();
         return repository.findAllByUserId(user.getId()).stream()
-                .map(PostMapper::toViewResponse).toList();
+                .map(PostMapper::toResponse).toList();
     }
 
     private List<Post> findPosts(PostFiltersRequest request) {

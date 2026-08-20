@@ -91,10 +91,10 @@ class CommentServiceTest {
                 .thenReturn(List.of(comment));
 
         // When
-        List<CommentViewResponse> response = service.findAll();
+        List<CommentResponse> response = service.findAll();
 
         // Then
-        List<CommentViewResponse> expected = List.of(CommentFactory.viewResponse());
+        List<CommentResponse> expected = List.of(CommentFactory.response());
         assertEquals(expected, List.of(response.getFirst()));
 
         verify(repository).findAll();
@@ -107,7 +107,7 @@ class CommentServiceTest {
                 .thenReturn(List.of());
 
         // When
-        List<CommentViewResponse> response = service.findAll();
+        List<CommentResponse> response = service.findAll();
 
         // Then
         assertTrue(response.isEmpty());
@@ -124,10 +124,10 @@ class CommentServiceTest {
                 .thenReturn(Optional.of(comment));
 
         // When
-        CommentViewResponse response = service.findById(1L);
+        CommentResponse response = service.findById(1L);
 
         // Then
-        CommentViewResponse expected = CommentFactory.viewResponse();
+        CommentResponse expected = CommentFactory.response();
         assertEquals(expected, response);
 
         verify(repository).findById(1L);

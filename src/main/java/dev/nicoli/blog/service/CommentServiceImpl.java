@@ -51,15 +51,15 @@ public class CommentServiceImpl extends CrudServiceImpl<Comment> implements Comm
     }
 
     @Override
-    public CommentViewResponse findById(Long id) {
-        return CommentMapper.toViewResponse(getById(id));
+    public CommentResponse findById(Long id) {
+        return CommentMapper.toResponse(getById(id));
     }
 
     @Override
-    public List<CommentViewResponse> findAll() {
+    public List<CommentResponse> findAll() {
         return repository.findAll()
                 .stream()
-                .map(CommentMapper::toViewResponse)
+                .map(CommentMapper::toResponse)
                 .toList();
     }
 

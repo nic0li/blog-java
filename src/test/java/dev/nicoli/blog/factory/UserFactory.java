@@ -53,8 +53,8 @@ public final class UserFactory {
         return userResponse("maria@email.com", "Maria Silva", "dev");
     }
 
-    public static UserViewResponse viewResponse() {
-        return new UserViewResponse(1L, "Maria", null, null);
+    public static UserProfileResponse profileResponse() {
+        return new UserProfileResponse(1L, "Maria", null, null);
     }
 
     private static User user(

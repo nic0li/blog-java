@@ -1,7 +1,10 @@
 package dev.nicoli.blog.mapper;
 
+import dev.nicoli.blog.dto.comment.CommentResponse;
 import dev.nicoli.blog.dto.post.*;
 import dev.nicoli.blog.entity.Post;
+
+import java.util.List;
 
 public final class PostMapper {
 
@@ -24,24 +27,22 @@ public final class PostMapper {
     }
 
     public static PostResponse toResponse(Post post) {
+        return toResponse(post, CommentMapper.toListResponseWithoutPost(post.getComments()));
+    }
+
+    public static PostResponse toResponseWithoutComments(Post post) {
+        return toResponse(post, List.of());
+    }
+
+    private static PostResponse toResponse(Post post, List<CommentResponse> comments) {
         return new PostResponse(post.getId(),
                 post.getTitle(),
                 post.getContent(),
-                CategoryMapper.toResponse(post.getCategory()),
-                UserMapper.toResponse(post.getUser()),
                 post.getCreatedAt(),
-                post.getUpdatedAt());
-    }
-
-    public static PostViewResponse toViewResponse(Post post) {
-        return new PostViewResponse(post.getId(),
-                post.getTitle(),
-                post.getContent(),
+                post.getUpdatedAt(),
                 CategoryMapper.toResponse(post.getCategory()),
-                UserMapper.toViewResponse(post.getUser()),
-                CommentMapper.toViewResponse(post.getComments()),
-                post.getCreatedAt(),
-                post.getUpdatedAt());
+                UserMapper.toProfileResponse(post.getUser()),
+                comments);
     }
 
 }

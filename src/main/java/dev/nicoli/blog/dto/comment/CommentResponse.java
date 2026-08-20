@@ -1,6 +1,9 @@
 package dev.nicoli.blog.dto.comment;
 
-import dev.nicoli.blog.dto.user.UserResponse;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import dev.nicoli.blog.dto.post.PostResponse;
+import dev.nicoli.blog.dto.user.UserProfileResponse;
 
 import java.time.Instant;
 
@@ -10,11 +13,15 @@ public record CommentResponse(
 
         String content,
 
-        UserResponse user,
-
         Instant createdAt,
 
-        Instant updatedAt
+        Instant updatedAt,
+
+        UserProfileResponse user,
+
+        @JsonIgnoreProperties("comments")
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        PostResponse post
 
 ) {
 }

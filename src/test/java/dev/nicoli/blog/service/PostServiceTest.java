@@ -118,11 +118,11 @@ class PostServiceTest {
                 .thenReturn(List.of(post));
 
         // When
-        List<PostViewResponse> response =
+        List<PostResponse> response =
                 service.findAll(new PostFiltersRequest(null, null));
 
         // Then
-        List<PostViewResponse> expected = List.of(PostFactory.viewResponse());
+        List<PostResponse> expected = List.of(PostFactory.response());
         assertEquals(expected, List.of(response.getFirst()));
 
         verify(repository).findAll();
@@ -137,11 +137,11 @@ class PostServiceTest {
                 .thenReturn(List.of(post));
 
         // When
-        List<PostViewResponse> response =
+        List<PostResponse> response =
                 service.findAll(new PostFiltersRequest("Like", null));
 
         // Then
-        List<PostViewResponse> expected = List.of(PostFactory.viewResponse());
+        List<PostResponse> expected = List.of(PostFactory.response());
         assertEquals(expected, List.of(response.getFirst()));
 
         verify(repository)
@@ -157,11 +157,11 @@ class PostServiceTest {
                 .thenReturn(List.of(post));
 
         // When
-        List<PostViewResponse> response =
+        List<PostResponse> response =
                 service.findAll(new PostFiltersRequest(null, "Movies"));
 
         // Then
-        List<PostViewResponse> expected = List.of(PostFactory.viewResponse());
+        List<PostResponse> expected = List.of(PostFactory.response());
         assertEquals(expected, List.of(response.getFirst()));
 
         verify(repository)
@@ -180,11 +180,11 @@ class PostServiceTest {
                 .thenReturn(List.of(post));
 
         // When
-        List<PostViewResponse> response =
+        List<PostResponse> response =
                 service.findAll(new PostFiltersRequest("Like", "Movies"));
 
         // Then
-        List<PostViewResponse> expected = List.of(PostFactory.viewResponse());
+        List<PostResponse> expected = List.of(PostFactory.response());
         assertEquals(expected, List.of(response.getFirst()));
 
         verify(repository)
@@ -202,10 +202,10 @@ class PostServiceTest {
                 .thenReturn(List.of(post));
 
         // When
-        List<PostViewResponse> response = service.findByUser(1L);
+        List<PostResponse> response = service.findByUser(1L);
 
         // Then
-        List<PostViewResponse> expected = List.of(PostFactory.viewResponse());
+        List<PostResponse> expected = List.of(PostFactory.response());
         assertEquals(expected, List.of(response.getFirst()));
 
         verify(repository).findAllByUserId(1L);
@@ -223,11 +223,11 @@ class PostServiceTest {
                 .thenReturn(List.of(post));
 
         // When
-        List<PostViewResponse> response =
+        List<PostResponse> response =
                 service.findByAuthenticatedUser();
 
         // Then
-        List<PostViewResponse> expected = List.of(PostFactory.viewResponse());
+        List<PostResponse> expected = List.of(PostFactory.response());
         assertEquals(expected, List.of(response.getFirst()));
 
         verify(authorizationService).getAuthenticatedUser();
@@ -243,10 +243,10 @@ class PostServiceTest {
                 .thenReturn(Optional.of(post));
 
         // When
-        PostViewResponse response = service.findById(1L);
+        PostResponse response = service.findById(1L);
 
         // Then
-        PostViewResponse expected = PostFactory.viewResponse();
+        PostResponse expected = PostFactory.response();
         assertEquals(expected, response);
 
         verify(repository).findById(1L);

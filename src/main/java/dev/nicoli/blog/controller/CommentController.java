@@ -24,12 +24,12 @@ public class CommentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CommentViewResponse>> findAll() {
+    public ResponseEntity<List<CommentResponse>> findAll() {
         return ResponseEntity.ok(service.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CommentViewResponse> findById(@PathVariable Long id) {
+    public ResponseEntity<CommentResponse> findById(@PathVariable Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 

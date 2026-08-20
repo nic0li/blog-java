@@ -6,9 +6,9 @@ import dev.nicoli.blog.dto.comment.*;
 import java.util.List;
 
 public interface CommentService extends CrudService<
-        CommentResponse, CommentViewResponse, CommentCreateRequest> {
+        CommentResponse, CommentResponse, CommentCreateRequest> {
 
     CommentResponse update(Long id, CommentUpdateRequest request);
 
-    List<CommentViewResponse> findAll();
+    List<CommentResponse> findAll();
 }

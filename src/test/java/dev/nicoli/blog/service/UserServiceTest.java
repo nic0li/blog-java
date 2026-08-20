@@ -227,7 +227,7 @@ class UserServiceTest {
                 .thenReturn(List.of(user, admin));
 
         // When
-        List<UserViewResponse> response = service.findAll();
+        List<UserProfileResponse> response = service.findAll();
 
         // Then
         assertEquals(2, response.size());
@@ -244,7 +244,7 @@ class UserServiceTest {
                 .thenReturn(List.of());
 
         // When
-        List<UserViewResponse> response = service.findAll();
+        List<UserProfileResponse> response = service.findAll();
 
         // Then
         assertTrue(response.isEmpty());
@@ -261,10 +261,10 @@ class UserServiceTest {
                 .thenReturn(Optional.of(user));
 
         // When
-        UserViewResponse response = service.findById(1L);
+        UserProfileResponse response = service.findById(1L);
 
         // Then
-        UserViewResponse expected = UserFactory.viewResponse();
+        UserProfileResponse expected = UserFactory.profileResponse();
         assertEquals(expected, response);
 
         verify(repository).findById(1L);
