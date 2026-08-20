@@ -78,147 +78,141 @@ class UserServiceTest {
     }
 
     @Test
-    void shouldUpdateUserSuccessfully() {
+    void shouldUpdateAuthenticatedUserSuccessfully() {
         // Given
         UserUpdateRequest request = UserFactory.updateRequest();
         User user = UserFactory.user();
 
-        when(repository.findById(1L))
-                .thenReturn(Optional.of(user));
+        when(authorizationService.getAuthenticatedUser())
+                .thenReturn(user);
         when(repository.findByEmail("mariasilva@email.com"))
                 .thenReturn(Optional.empty());
         when(repository.save(user))
                 .thenReturn(user);
 
         // When
-        UserResponse response = service.update(1L, request);
+        UserResponse response = service.updateMe(request);
 
         // Then
         UserResponse expected = UserFactory.updatedResponse();
         assertEquals(expected, response);
 
-        verify(repository).findById(1L);
-        verify(authorizationService).validateOwner(user);
+        verify(authorizationService).getAuthenticatedUser();
         verify(repository).findByEmail("mariasilva@email.com");
         verify(repository).save(user);
     }
 
     @Test
-    void shouldUpdateUserWithNullEmail() {
+    void shouldUpdateAuthenticatedUserWithNullEmail() {
         // Given
         UserUpdateRequest request = UserFactory.updateRequestNullEmail();
         User user = UserFactory.user();
 
-        when(repository.findById(1L))
-                .thenReturn(Optional.of(user));
+        when(authorizationService.getAuthenticatedUser())
+                .thenReturn(user);
         when(repository.save(user))
                 .thenReturn(user);
 
         // When
-        UserResponse response = service.update(1L, request);
+        UserResponse response = service.updateMe(request);
 
         // Then
         UserResponse expected = UserFactory.updatedResponseSameEmail();
         assertEquals(expected, response);
 
-        verify(repository).findById(1L);
-        verify(authorizationService).validateOwner(user);
+        verify(authorizationService).getAuthenticatedUser();
         verify(repository, never()).findByEmail(any());
         verify(repository).save(user);
     }
 
     @Test
-    void shouldUpdateUserWithSameEmail() {
+    void shouldUpdateAuthenticatedUserWithSameEmail() {
         // Given
         UserUpdateRequest request = UserFactory.updateRequestSameEmail();
         User user = UserFactory.user();
 
-        when(repository.findById(1L))
-                .thenReturn(Optional.of(user));
+        when(authorizationService.getAuthenticatedUser())
+                .thenReturn(user);
         when(repository.findByEmail("maria@email.com"))
                 .thenReturn(Optional.of(user));
         when(repository.save(user))
                 .thenReturn(user);
 
         // When
-        UserResponse response = service.update(1L, request);
+        UserResponse response = service.updateMe(request);
 
         // Then
         UserResponse expected = UserFactory.updatedResponseSameEmail();
         assertEquals(expected, response);
 
-        verify(repository).findById(1L);
-        verify(authorizationService).validateOwner(user);
+        verify(authorizationService).getAuthenticatedUser();
         verify(repository).findByEmail("maria@email.com");
         verify(repository).save(user);
     }
 
     @Test
-    void shouldUpdateUserWithEmailEmpty() {
+    void shouldUpdateAuthenticatedUserWithEmailEmpty() {
         // Given
         UserUpdateRequest request = UserFactory.updateRequestEmailEmpty();
         User user = UserFactory.user();
 
-        when(repository.findById(1L))
-                .thenReturn(Optional.of(user));
+        when(authorizationService.getAuthenticatedUser())
+                .thenReturn(user);
         when(repository.save(user))
                 .thenReturn(user);
 
         // When
-        UserResponse response = service.update(1L, request);
+        UserResponse response = service.updateMe(request);
 
         // Then
         UserResponse expected = UserFactory.updatedResponseSameEmail();
         assertEquals(expected, response);
 
-        verify(repository).findById(1L);
-        verify(authorizationService).validateOwner(user);
+        verify(authorizationService).getAuthenticatedUser();
         verify(repository, never()).findByEmail(any());
         verify(repository).save(user);
     }
 
     @Test
-    void shouldUpdateUserWithoutEmailField() {
+    void shouldUpdateAuthenticatedUserWithoutEmailField() {
         // Given
         UserUpdateRequest request = UserFactory.updateRequestWithoutEmail();
         User user = UserFactory.user();
 
-        when(repository.findById(1L))
-                .thenReturn(Optional.of(user));
+        when(authorizationService.getAuthenticatedUser())
+                .thenReturn(user);
         when(repository.save(user))
                 .thenReturn(user);
 
         // When
-        UserResponse response = service.update(1L, request);
+        UserResponse response = service.updateMe(request);
 
         // Then
         UserResponse expected = UserFactory.updatedResponseSameEmail();
         assertEquals(expected, response);
 
-        verify(repository).findById(1L);
-        verify(authorizationService).validateOwner(user);
+        verify(authorizationService).getAuthenticatedUser();
         verify(repository, never()).findByEmail(any());
         verify(repository).save(user);
     }
 
     @Test
-    void shouldThrowExceptionWhenUpdatingWithExistingEmail() {
+    void shouldThrowExceptionWhenUpdatingAuthenticatedUserWithExistingEmail() {
         // Given
         UserUpdateRequest request = UserFactory.updateRequest();
         User user = UserFactory.user();
         User admin = UserFactory.admin();
 
-        when(repository.findById(1L))
-                .thenReturn(Optional.of(user));
+        when(authorizationService.getAuthenticatedUser())
+                .thenReturn(user);
         when(repository.findByEmail("mariasilva@email.com"))
                 .thenReturn(Optional.of(admin));
 
         // When / Then
         assertThrows(ResponseStatusException.class,
-                () -> service.update(1L, request));
+                () -> service.updateMe(request));
 
-        verify(repository).findById(1L);
-        verify(authorizationService).validateOwner(user);
+        verify(authorizationService).getAuthenticatedUser();
         verify(repository).findByEmail("mariasilva@email.com");
         verify(repository, never()).save(any());
     }
@@ -305,52 +299,6 @@ class UserServiceTest {
         assertEquals(expected, response);
 
         verify(authorizationService).getAuthenticatedUser();
-    }
-
-    @Test
-    void shouldUpdateAuthenticatedUserSuccessfully() {
-        // Given
-        UserUpdateRequest request = UserFactory.updateRequest();
-        User user = UserFactory.user();
-
-        when(authorizationService.getAuthenticatedUser())
-                .thenReturn(user);
-        when(repository.findByEmail("mariasilva@email.com"))
-                .thenReturn(Optional.empty());
-        when(repository.save(user))
-                .thenReturn(user);
-
-        // When
-        UserResponse response = service.updateMe(request);
-
-        // Then
-        UserResponse expected = UserFactory.updatedResponse();
-        assertEquals(expected, response);
-
-        verify(authorizationService).getAuthenticatedUser();
-        verify(repository).findByEmail("mariasilva@email.com");
-        verify(repository).save(user);
-    }
-
-    @Test
-    void shouldThrowExceptionWhenUpdatingAuthenticatedUserWithExistingEmail() {
-        // Given
-        UserUpdateRequest request = UserFactory.updateRequest();
-        User user = UserFactory.user();
-        User admin = UserFactory.admin();
-
-        when(authorizationService.getAuthenticatedUser())
-                .thenReturn(user);
-        when(repository.findByEmail("mariasilva@email.com"))
-                .thenReturn(Optional.of(admin));
-
-        // When / Then
-        assertThrows(ResponseStatusException.class,
-                () -> service.updateMe(request));
-
-        verify(authorizationService).getAuthenticatedUser();
-        verify(repository).findByEmail("mariasilva@email.com");
-        verify(repository, never()).save(any());
     }
 
     @Test

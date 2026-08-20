@@ -6,7 +6,7 @@ import dev.nicoli.blog.dto.user.*;
 import java.util.List;
 
 public interface UserService extends CrudService<
-        UserResponse, UserViewResponse, UserCreateRequest, UserUpdateRequest> {
+        UserResponse, UserViewResponse, UserCreateRequest> {
 
     List<UserViewResponse> findAll();
 

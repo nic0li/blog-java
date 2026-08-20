@@ -40,14 +40,6 @@ public class UserController {
         return ResponseEntity.ok(service.findById(id));
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<UserResponse> update(
-            @PathVariable Long id,
-            @Valid @RequestBody UserUpdateRequest request) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(service.update(id, request));
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);

@@ -7,7 +7,9 @@ import dev.nicoli.blog.entity.Category;
 import java.util.List;
 
 public interface CategoryService extends CrudService<
-        CategoryResponse, CategoryResponse, CategoryRequest, CategoryRequest> {
+        CategoryResponse, CategoryResponse, CategoryRequest> {
+
+    CategoryResponse update(Long id, CategoryRequest request);
 
     List<CategoryResponse> findAll(String name);
 

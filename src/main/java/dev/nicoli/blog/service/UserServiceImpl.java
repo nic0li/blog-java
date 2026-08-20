@@ -41,13 +41,6 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
     }
 
     @Override
-    public UserResponse update(Long id, UserUpdateRequest request) {
-        User user = getById(id);
-        authorizationService.validateOwner(user);
-        return updateUserResponse(request, user);
-    }
-
-    @Override
     public void delete(Long id) {
         User user = getById(id);
         authorizationService.validateOwnerOrAdmin(user);

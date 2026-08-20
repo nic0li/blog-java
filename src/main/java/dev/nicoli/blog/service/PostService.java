@@ -7,7 +7,9 @@ import dev.nicoli.blog.entity.Post;
 import java.util.List;
 
 public interface PostService extends CrudService<
-        PostResponse, PostViewResponse, PostCreateRequest, PostUpdateRequest> {
+        PostResponse, PostViewResponse, PostCreateRequest> {
+
+    PostResponse update(Long id, PostUpdateRequest request);
 
     List<PostViewResponse> findAll(PostFiltersRequest request);
 
