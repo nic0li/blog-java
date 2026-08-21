@@ -1,4 +1,4 @@
-package dev.nicoli.blog.common.entity;
+package dev.nicoli.blog.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

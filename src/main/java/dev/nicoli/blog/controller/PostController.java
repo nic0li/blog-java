@@ -1,7 +1,10 @@
 package dev.nicoli.blog.controller;
 
+import dev.nicoli.blog.dto.comment.CommentRequest;
+import dev.nicoli.blog.dto.comment.CommentResponse;
 import dev.nicoli.blog.dto.post.*;
-import dev.nicoli.blog.service.PostService;
+import dev.nicoli.blog.service.interfaces.CommentService;
+import dev.nicoli.blog.service.interfaces.PostService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springdoc.core.annotations.ParameterObject;
@@ -19,9 +22,12 @@ import java.util.List;
 public class PostController {
 
     private final PostService service;
+    private final CommentService commentService;
 
-    public PostController(PostService service) {
+    public PostController(PostService service,
+                          CommentService commentService) {
         this.service = service;
+        this.commentService = commentService;
     }
 
     @GetMapping
@@ -37,7 +43,7 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<PostResponse> create(
-            @RequestBody PostCreateRequest request) {
+            @RequestBody PostRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(service.create(request));
     }
@@ -45,7 +51,7 @@ public class PostController {
     @PatchMapping("/{id}")
     public ResponseEntity<PostResponse> update(
             @PathVariable Long id,
-            @RequestBody PostUpdateRequest request) {
+            @RequestBody PostRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(service.update(id, request));
     }
@@ -54,6 +60,19 @@ public class PostController {
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/comments")
+    public ResponseEntity<CommentResponse> createComment(
+            @PathVariable Long id,
+            @RequestBody CommentRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(commentService.create(id, request));
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<List<PostResponse>> findAuthenticatedUserPosts() {
+        return ResponseEntity.ok(service.findByAuthenticatedUser());
     }
 
 }

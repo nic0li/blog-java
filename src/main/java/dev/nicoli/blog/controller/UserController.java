@@ -2,12 +2,10 @@ package dev.nicoli.blog.controller;
 
 import dev.nicoli.blog.dto.post.*;
 import dev.nicoli.blog.dto.user.*;
-import dev.nicoli.blog.service.PostService;
-import dev.nicoli.blog.service.UserService;
+import dev.nicoli.blog.service.interfaces.PostService;
+import dev.nicoli.blog.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,53 +28,27 @@ public class UserController {
         this.postService = postService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<UserProfileResponse>> findAll() {
-        return ResponseEntity.ok(service.findAll());
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<UserProfileResponse> findById(@PathVariable Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        service.delete(id);
-        return ResponseEntity.noContent().build();
-    }
-
-    @GetMapping("/me")
-    public ResponseEntity<UserResponse> findMe() {
-        return ResponseEntity.ok(service.findMe());
-    }
-
-    @PatchMapping("/me")
-    public ResponseEntity<UserResponse> updateMe(
-            @Valid @RequestBody UserUpdateRequest request) {
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(service.updateMe(request));
-    }
-
-    @DeleteMapping("/me")
-    public ResponseEntity<Void> deleteMe() {
-        service.deleteMe();
-        return ResponseEntity.noContent().build();
-    }
-
-    @PatchMapping("/me/password")
-    public ResponseEntity<Void> updatePassword(
-            @RequestBody UserPasswordUpdateRequest request) {
-
-        service.updatePassword(request);
-        return ResponseEntity.noContent().build();
+    @GetMapping
+    public ResponseEntity<List<UserProfileResponse>> findAll() {
+        return ResponseEntity.ok(service.findAll());
     }
 
     @PatchMapping("/{id}/role")
-    public ResponseEntity<UserResponse> toggleRole(
+    public ResponseEntity<UserResponse> toggleUserRole(
             @PathVariable Long id) {
 
-        return ResponseEntity.ok(service.toggleRole(id));
+        return ResponseEntity.ok(service.toggleUserRole(id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        service.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}/posts")
@@ -84,12 +56,6 @@ public class UserController {
             @PathVariable Long id) {
         return ResponseEntity.ok(
                 postService.findByUser(id));
-    }
-
-    @GetMapping("/me/posts")
-    public ResponseEntity<List<PostResponse>> findAuthenticatedUserPosts() {
-        return ResponseEntity.ok(
-                postService.findByAuthenticatedUser());
     }
 
 }

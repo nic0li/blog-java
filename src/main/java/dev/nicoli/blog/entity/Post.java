@@ -1,6 +1,5 @@
 package dev.nicoli.blog.entity;
 
-import dev.nicoli.blog.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -2,8 +2,11 @@ package dev.nicoli.blog.service;
 
 import dev.nicoli.blog.dto.comment.*;
 import dev.nicoli.blog.entity.Comment;
+import dev.nicoli.blog.entity.Post;
 import dev.nicoli.blog.factory.*;
 import dev.nicoli.blog.repository.CommentRepository;
+import dev.nicoli.blog.service.interfaces.AuthorizationService;
+import dev.nicoli.blog.service.interfaces.PostService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -36,24 +39,25 @@ class CommentServiceTest {
     @Test
     void shouldCreateCommentSuccessfully() {
         // Given
-        CommentCreateRequest request = CommentFactory.createRequest();
+        CommentRequest request = CommentFactory.request();
         Comment comment = CommentFactory.comment();
+        Post post = PostFactory.post();
 
-        when(postService.getById(1L))
-                .thenReturn(PostFactory.post());
+        when(postService.findEntityById(1L))
+                .thenReturn(post);
         when(authorizationService.getAuthenticatedUser())
                 .thenReturn(UserFactory.user());
         when(repository.save(any(Comment.class)))
                 .thenReturn(comment);
 
         // When
-        CommentResponse response = service.create(request);
+        CommentResponse response = service.create(post.getId(), request);
 
         // Then
         CommentResponse expected = CommentFactory.response();
         assertEquals(expected, response);
 
-        verify(postService).getById(1L);
+        verify(postService).findEntityById(1L);
         verify(authorizationService).getAuthenticatedUser();
         verify(repository).save(any(Comment.class));
     }
@@ -61,7 +65,7 @@ class CommentServiceTest {
     @Test
     void shouldUpdateCommentSuccessfully() {
         // Given
-        CommentUpdateRequest request = CommentFactory.updateRequest();
+        CommentRequest request = CommentFactory.updateRequest();
         Comment comment = CommentFactory.comment();
         Comment updatedComment = CommentFactory.updatedComment();
 

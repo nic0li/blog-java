@@ -1,4 +1,4 @@
-package dev.nicoli.blog.common.enums;
+package dev.nicoli.blog.enums;
 
 public enum UserRole {
     USER,

@@ -1,6 +1,6 @@
 package dev.nicoli.blog.factory;
 
-import dev.nicoli.blog.common.enums.UserRole;
+import dev.nicoli.blog.enums.UserRole;
 import dev.nicoli.blog.dto.user.*;
 import dev.nicoli.blog.entity.User;
 

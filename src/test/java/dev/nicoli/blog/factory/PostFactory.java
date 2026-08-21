@@ -15,13 +15,13 @@ public final class PostFactory {
         return post("I love drama", "Updated content");
     }
 
-    public static PostCreateRequest createRequest() {
-        return new PostCreateRequest(
+    public static PostRequest createRequest() {
+        return new PostRequest(
                 "I like drama", "Content", 1L);
     }
 
-    public static PostUpdateRequest updateRequest() {
-        return new PostUpdateRequest(
+    public static PostRequest updateRequest() {
+        return new PostRequest(
                 "I love drama", "Updated content", 1L);
     }
 

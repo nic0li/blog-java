@@ -4,6 +4,8 @@ import dev.nicoli.blog.dto.post.*;
 import dev.nicoli.blog.entity.Post;
 import dev.nicoli.blog.factory.*;
 import dev.nicoli.blog.repository.PostRepository;
+import dev.nicoli.blog.service.interfaces.AuthorizationService;
+import dev.nicoli.blog.service.interfaces.CategoryService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -35,10 +37,10 @@ class PostServiceTest {
     @Test
     void shouldCreatePostSuccessfully() {
         // Given
-        PostCreateRequest request = PostFactory.createRequest();
+        PostRequest request = PostFactory.createRequest();
         Post post = PostFactory.post();
 
-        when(categoryService.getById(1L))
+        when(categoryService.findEntityById(1L))
                 .thenReturn(CategoryFactory.movies());
         when(authorizationService.getAuthenticatedUser())
                 .thenReturn(UserFactory.user());
@@ -52,7 +54,7 @@ class PostServiceTest {
         PostResponse expected = PostFactory.response();
         assertEquals(expected, response);
 
-        verify(categoryService).getById(1L);
+        verify(categoryService).findEntityById(1L);
         verify(authorizationService).getAuthenticatedUser();
         verify(repository).save(any(Post.class));
     }
@@ -60,13 +62,13 @@ class PostServiceTest {
     @Test
     void shouldUpdatePostSuccessfully() {
         // Given
-        PostUpdateRequest request = PostFactory.updateRequest();
+        PostRequest request = PostFactory.updateRequest();
         Post post = PostFactory.post();
         Post updatedPost = PostFactory.updatedPost();
 
         when(repository.findById(1L))
                 .thenReturn(Optional.of(post));
-        when(categoryService.getById(1L))
+        when(categoryService.findEntityById(1L))
                 .thenReturn(CategoryFactory.movies());
         when(repository.save(post))
                 .thenReturn(updatedPost);
@@ -80,14 +82,14 @@ class PostServiceTest {
 
         verify(repository).findById(1L);
         verify(authorizationService).validateOwner(post.getUser());
-        verify(categoryService).getById(1L);
+        verify(categoryService).findEntityById(1L);
         verify(repository).save(post);
     }
 
     @Test
     void shouldUpdatePostWithoutChangingCategory() {
         // Given
-        PostUpdateRequest request = new PostUpdateRequest(null, null, null);
+        PostRequest request = new PostRequest(null, null, null);
         Post post = PostFactory.post();
         Post updatedPost = PostFactory.updatedPost();
 
@@ -105,7 +107,7 @@ class PostServiceTest {
 
         verify(repository).findById(1L);
         verify(authorizationService).validateOwner(post.getUser());
-        verify(categoryService, never()).getById(any());
+        verify(categoryService, never()).findEntityById(any());
         verify(repository).save(post);
     }
 

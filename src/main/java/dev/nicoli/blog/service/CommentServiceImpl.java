@@ -1,16 +1,18 @@
 package dev.nicoli.blog.service;
 
-import dev.nicoli.blog.common.service.CrudServiceImpl;
 import dev.nicoli.blog.dto.comment.*;
 import dev.nicoli.blog.entity.Comment;
 import dev.nicoli.blog.mapper.CommentMapper;
 import dev.nicoli.blog.repository.CommentRepository;
+import dev.nicoli.blog.service.interfaces.AuthorizationService;
+import dev.nicoli.blog.service.interfaces.CommentService;
+import dev.nicoli.blog.service.interfaces.PostService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class CommentServiceImpl extends CrudServiceImpl<Comment> implements CommentService {
+public class CommentServiceImpl extends EntityServiceImpl<Comment> implements CommentService {
 
     private final CommentRepository repository;
 
@@ -28,16 +30,16 @@ public class CommentServiceImpl extends CrudServiceImpl<Comment> implements Comm
     }
 
     @Override
-    public CommentResponse create(CommentCreateRequest request) {
+    public CommentResponse create(Long postId, CommentRequest request) {
         Comment comment = CommentMapper.createEntity(request);
-        comment.setPost(postService.getById(request.postId()));
+        comment.setPost(postService.findEntityById(postId));
         comment.setUser(authorizationService.getAuthenticatedUser());
         return CommentMapper.toResponse(repository.save(comment));
     }
 
     @Override
-    public CommentResponse update(Long id, CommentUpdateRequest request) {
-        Comment comment = getById(id);
+    public CommentResponse update(Long id, CommentRequest request) {
+        Comment comment = findEntityById(id);
         authorizationService.validateOwner(comment.getUser());
         CommentMapper.updateEntity(comment, request);
         return CommentMapper.toResponse(repository.save(comment));
@@ -45,14 +47,14 @@ public class CommentServiceImpl extends CrudServiceImpl<Comment> implements Comm
 
     @Override
     public void delete(Long id) {
-        Comment comment = getById(id);
+        Comment comment = findEntityById(id);
         authorizationService.validateOwnerOrAdmin(comment.getUser());
         repository.delete(comment);
     }
 
     @Override
     public CommentResponse findById(Long id) {
-        return CommentMapper.toResponse(getById(id));
+        return CommentMapper.toResponse(findEntityById(id));
     }
 
     @Override

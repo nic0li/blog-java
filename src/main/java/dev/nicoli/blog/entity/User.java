@@ -1,7 +1,6 @@
 package dev.nicoli.blog.entity;
 
-import dev.nicoli.blog.common.entity.BaseEntity;
-import dev.nicoli.blog.common.enums.UserRole;
+import dev.nicoli.blog.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

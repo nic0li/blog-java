@@ -5,6 +5,7 @@ import dev.nicoli.blog.entity.User;
 import dev.nicoli.blog.mapper.UserMapper;
 import dev.nicoli.blog.repository.UserRepository;
 import dev.nicoli.blog.security.*;
+import dev.nicoli.blog.service.interfaces.AuthenticationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

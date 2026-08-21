@@ -7,7 +7,7 @@ public final class CategoryMapper {
 
     private CategoryMapper() { }
 
-    public static Category toEntity(CategoryRequest request) {
+    public static Category createEntity(CategoryRequest request) {
         Category category = new Category();
         category.setName(request.name());
         return category;

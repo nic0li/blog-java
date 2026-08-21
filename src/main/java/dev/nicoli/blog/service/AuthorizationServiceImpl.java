@@ -1,7 +1,9 @@
 package dev.nicoli.blog.service;
 
-import dev.nicoli.blog.common.enums.UserRole;
+import dev.nicoli.blog.enums.UserRole;
 import dev.nicoli.blog.entity.User;
+import dev.nicoli.blog.service.interfaces.AuthenticationService;
+import dev.nicoli.blog.service.interfaces.AuthorizationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -33,9 +35,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     @Override
     public void validateOwner(User resourceOwner) {
         if (!isOwner(resourceOwner)) {
-            throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN,
-                    "You are not allowed to modify this resource");
+            notAllowed();
         }
     }
 
@@ -51,10 +51,9 @@ public class AuthorizationServiceImpl implements AuthorizationService {
     @Override
     public void validateOwnerOrAdmin(User resourceOwner) {
         User authenticatedUser = getAuthenticatedUser();
-        if (!isOwner(resourceOwner, authenticatedUser) && !isAdmin(authenticatedUser)) {
-            throw new ResponseStatusException(
-                    HttpStatus.FORBIDDEN,
-                    "You are not allowed to modify this resource");
+        if (!isOwner(resourceOwner, authenticatedUser)
+                && !isAdmin(authenticatedUser)) {
+            notAllowed();
         }
     }
 
@@ -64,6 +63,12 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
     private boolean isAdmin(User authenticatedUser) {
         return authenticatedUser.getRole() == UserRole.ADMIN;
+    }
+
+    private static void notAllowed() {
+        throw new ResponseStatusException(
+                HttpStatus.FORBIDDEN,
+                "You are not allowed to modify this resource");
     }
 
 }

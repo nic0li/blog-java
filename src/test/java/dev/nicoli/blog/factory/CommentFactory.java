@@ -13,12 +13,12 @@ public final class CommentFactory {
         return comment("Updated comment!");
     }
 
-    public static CommentCreateRequest createRequest() {
-        return new CommentCreateRequest("Great post!", 1L);
+    public static CommentRequest request() {
+        return new CommentRequest("Great post!");
     }
 
-    public static CommentUpdateRequest updateRequest() {
-        return new CommentUpdateRequest("Updated comment!");
+    public static CommentRequest updateRequest() {
+        return new CommentRequest("Updated comment!");
     }
 
     public static CommentResponse response() {

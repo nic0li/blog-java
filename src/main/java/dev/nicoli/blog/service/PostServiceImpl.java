@@ -1,17 +1,21 @@
 package dev.nicoli.blog.service;
 
-import dev.nicoli.blog.common.service.CrudServiceImpl;
 import dev.nicoli.blog.dto.post.*;
 import dev.nicoli.blog.entity.Post;
 import dev.nicoli.blog.mapper.PostMapper;
 import dev.nicoli.blog.repository.PostRepository;
+import dev.nicoli.blog.service.interfaces.AuthorizationService;
+import dev.nicoli.blog.service.interfaces.CategoryService;
+import dev.nicoli.blog.service.interfaces.PostService;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
 @Service
-public class PostServiceImpl extends CrudServiceImpl<Post> implements PostService {
+public class PostServiceImpl extends EntityServiceImpl<Post> implements PostService {
 
     private final PostRepository repository;
 
@@ -29,27 +33,31 @@ public class PostServiceImpl extends CrudServiceImpl<Post> implements PostServic
     }
 
     @Override
-    public PostResponse create(PostCreateRequest request) {
+    public PostResponse create(PostRequest request) {
+        if (!request.hasTitle() || !request.hasContent() || !request.hasCategoryId()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "All fields are required");
+        }
         Post post = PostMapper.createEntity(request);
-        post.setCategory(categoryService.getById(request.categoryId()));
+        post.setCategory(categoryService.findEntityById(request.categoryId()));
         post.setUser(authorizationService.getAuthenticatedUser());
         return PostMapper.toResponse(repository.save(post));
     }
 
     @Override
-    public PostResponse update(Long id, PostUpdateRequest request) {
-        Post post = getById(id);
+    public PostResponse update(Long id, PostRequest request) {
+        Post post = findEntityById(id);
         authorizationService.validateOwner(post.getUser());
         PostMapper.updateEntity(post, request);
         if (request.categoryId() != null) {
-            post.setCategory(categoryService.getById(request.categoryId()));
+            post.setCategory(categoryService.findEntityById(request.categoryId()));
         }
         return PostMapper.toResponse(repository.save(post));
     }
 
     @Override
     public void delete(Long id) {
-        Post post = getById(id);
+        Post post = findEntityById(id);
         authorizationService.validateOwnerOrAdmin(post.getUser());
         repository.delete(post);
     }
@@ -57,7 +65,7 @@ public class PostServiceImpl extends CrudServiceImpl<Post> implements PostServic
     @Transactional(readOnly = true)
     @Override
     public PostResponse findById(Long id) {
-        return PostMapper.toResponse(getById(id));
+        return PostMapper.toResponse(findEntityById(id));
     }
 
     @Transactional(readOnly = true)

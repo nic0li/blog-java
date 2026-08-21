@@ -1,10 +1,11 @@
 package dev.nicoli.blog.service;
 
-import dev.nicoli.blog.common.service.CrudServiceImpl;
 import dev.nicoli.blog.dto.category.*;
 import dev.nicoli.blog.entity.Category;
 import dev.nicoli.blog.mapper.CategoryMapper;
 import dev.nicoli.blog.repository.CategoryRepository;
+import dev.nicoli.blog.service.interfaces.AuthorizationService;
+import dev.nicoli.blog.service.interfaces.CategoryService;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -12,7 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @Service
-public class CategoryServiceImpl extends CrudServiceImpl<Category> implements CategoryService {
+public class CategoryServiceImpl extends EntityServiceImpl<Category> implements CategoryService {
 
     private final CategoryRepository repository;
 
@@ -29,14 +30,14 @@ public class CategoryServiceImpl extends CrudServiceImpl<Category> implements Ca
     public CategoryResponse create(CategoryRequest request) {
         authorizationService.validateAdmin();
         validateUniqueName(request.name(), null);
-        Category category = CategoryMapper.toEntity(request);
+        Category category = CategoryMapper.createEntity(request);
         return CategoryMapper.toResponse(repository.save(category));
     }
 
     @Override
     public CategoryResponse update(Long id, CategoryRequest request) {
         authorizationService.validateAdmin();
-        Category category = getById(id);
+        Category category = findEntityById(id);
         validateUniqueName(request.name(), id);
         CategoryMapper.updateEntity(category, request);
         return CategoryMapper.toResponse(repository.save(category));
@@ -45,13 +46,13 @@ public class CategoryServiceImpl extends CrudServiceImpl<Category> implements Ca
     @Override
     public void delete(Long id) {
         authorizationService.validateAdmin();
-        Category category = getById(id);
+        Category category = findEntityById(id);
         repository.delete(category);
     }
 
     @Override
     public CategoryResponse findById(Long id) {
-        return CategoryMapper.toResponse(getById(id));
+        return CategoryMapper.toResponse(findEntityById(id));
     }
 
     @Override

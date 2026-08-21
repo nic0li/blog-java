@@ -10,13 +10,13 @@ public final class CommentMapper {
 
     private CommentMapper() { }
 
-    public static Comment createEntity(CommentCreateRequest request) {
+    public static Comment createEntity(CommentRequest request) {
         Comment comment = new Comment();
         comment.setContent(request.content());
         return comment;
     }
 
-    public static void updateEntity(Comment comment, CommentUpdateRequest request) {
+    public static void updateEntity(Comment comment, CommentRequest request) {
         if (request.content() != null) {
             comment.setContent(request.content());
         }

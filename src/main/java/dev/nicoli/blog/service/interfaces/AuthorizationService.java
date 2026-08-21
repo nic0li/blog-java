@@ -1,4 +1,4 @@
-package dev.nicoli.blog.service;
+package dev.nicoli.blog.service.interfaces;
 
 import dev.nicoli.blog.entity.User;
 

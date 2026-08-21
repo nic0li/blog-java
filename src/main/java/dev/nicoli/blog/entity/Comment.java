@@ -1,6 +1,5 @@
 package dev.nicoli.blog.entity;
 
-import dev.nicoli.blog.common.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;

@@ -1,11 +1,12 @@
 package dev.nicoli.blog.service;
 
-import dev.nicoli.blog.common.enums.UserRole;
-import dev.nicoli.blog.common.service.CrudServiceImpl;
+import dev.nicoli.blog.enums.UserRole;
 import dev.nicoli.blog.dto.user.*;
 import dev.nicoli.blog.entity.User;
 import dev.nicoli.blog.mapper.UserMapper;
 import dev.nicoli.blog.repository.UserRepository;
+import dev.nicoli.blog.service.interfaces.AuthorizationService;
+import dev.nicoli.blog.service.interfaces.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @Service
-public class UserServiceImpl extends CrudServiceImpl<User> implements UserService {
+public class UserServiceImpl extends EntityServiceImpl<User> implements UserService {
 
     private final UserRepository repository;
 
@@ -41,15 +42,8 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
     }
 
     @Override
-    public void delete(Long id) {
-        User user = getById(id);
-        authorizationService.validateOwnerOrAdmin(user);
-        repository.delete(user);
-    }
-
-    @Override
     public UserProfileResponse findById(Long id) {
-        return UserMapper.toProfileResponse(getById(id));
+        return UserMapper.toProfileResponse(findEntityById(id));
     }
 
     @Override
@@ -61,42 +55,10 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
     }
 
     @Override
-    public UserResponse findMe() {
-        User user = authorizationService.getAuthenticatedUser();
-        return UserMapper.toResponse(user);
-    }
-
-    @Override
-    public UserResponse updateMe(UserUpdateRequest request) {
-        User user = authorizationService.getAuthenticatedUser();
-        return updateUserResponse(request, user);
-    }
-
-    @Override
-    public void deleteMe() {
-        User user = authorizationService.getAuthenticatedUser();
-        repository.delete(user);
-    }
-
-    @Override
-    public void updatePassword(UserPasswordUpdateRequest request) {
-        User user = authorizationService.getAuthenticatedUser();
-        if (!passwordEncoder.matches(
-                request.currentPassword(),
-                user.getPassword())) {
-
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-                    "Invalid current password");
-        }
-        user.setPassword(passwordEncoder.encode(request.newPassword()));
-        repository.save(user);
-    }
-
-    @Override
-    public UserResponse toggleRole(Long id) {
+    public UserResponse toggleUserRole(Long id) {
         authorizationService.validateAdmin();
         User authenticatedUser = authorizationService.getAuthenticatedUser();
-        User user = getById(id);
+        User user = findEntityById(id);
         if (authenticatedUser.getId().equals(user.getId())) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
@@ -108,7 +70,43 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
         return UserMapper.toResponse(repository.save(user));
     }
 
-    private UserResponse updateUserResponse(UserUpdateRequest request, User user) {
+    @Override
+    public void deleteUser(Long id) {
+        User user = findEntityById(id);
+        authorizationService.validateOwnerOrAdmin(user);
+        repository.delete(user);
+    }
+
+    @Override
+    public UserResponse findAuthenticated() {
+        User user = authorizationService.getAuthenticatedUser();
+        return UserMapper.toResponse(user);
+    }
+
+    @Override
+    public UserResponse updateAuthenticated(UserUpdateRequest request) {
+        User user = authorizationService.getAuthenticatedUser();
+        return updateUser(request, user);
+    }
+
+    @Override
+    public void updateAuthenticatedPassword(UserPasswordUpdateRequest request) {
+        User user = authorizationService.getAuthenticatedUser();
+        if (!passwordEncoder.matches(request.currentPassword(), user.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                    "Invalid current password");
+        }
+        user.setPassword(passwordEncoder.encode(request.newPassword()));
+        repository.save(user);
+    }
+
+    @Override
+    public void deleteAuthenticated() {
+        User user = authorizationService.getAuthenticatedUser();
+        repository.delete(user);
+    }
+
+    private UserResponse updateUser(UserUpdateRequest request, User user) {
         if (request.isEmailProvided()
                 && request.getEmail() != null && !request.getEmail().isBlank()) {
             validateEmailAvailability(request.getEmail(), user.getId());
@@ -124,8 +122,7 @@ public class UserServiceImpl extends CrudServiceImpl<User> implements UserServic
                         && !userByEmail.get().getId().equals(userId);
 
         if (emailAlreadyExists && emailBelongsToAnotherUser) {
-            throw new ResponseStatusException(
-                    HttpStatus.BAD_REQUEST,
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "Email already registered");
         }
     }

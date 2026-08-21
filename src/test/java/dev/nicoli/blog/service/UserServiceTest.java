@@ -1,10 +1,11 @@
 package dev.nicoli.blog.service;
 
-import dev.nicoli.blog.common.enums.UserRole;
+import dev.nicoli.blog.enums.UserRole;
 import dev.nicoli.blog.dto.user.*;
 import dev.nicoli.blog.entity.User;
 import dev.nicoli.blog.factory.UserFactory;
 import dev.nicoli.blog.repository.UserRepository;
+import dev.nicoli.blog.service.interfaces.AuthorizationService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -91,7 +92,7 @@ class UserServiceTest {
                 .thenReturn(user);
 
         // When
-        UserResponse response = service.updateMe(request);
+        UserResponse response = service.updateAuthenticated(request);
 
         // Then
         UserResponse expected = UserFactory.updatedResponse();
@@ -114,7 +115,7 @@ class UserServiceTest {
                 .thenReturn(user);
 
         // When
-        UserResponse response = service.updateMe(request);
+        UserResponse response = service.updateAuthenticated(request);
 
         // Then
         UserResponse expected = UserFactory.updatedResponseSameEmail();
@@ -139,7 +140,7 @@ class UserServiceTest {
                 .thenReturn(user);
 
         // When
-        UserResponse response = service.updateMe(request);
+        UserResponse response = service.updateAuthenticated(request);
 
         // Then
         UserResponse expected = UserFactory.updatedResponseSameEmail();
@@ -162,7 +163,7 @@ class UserServiceTest {
                 .thenReturn(user);
 
         // When
-        UserResponse response = service.updateMe(request);
+        UserResponse response = service.updateAuthenticated(request);
 
         // Then
         UserResponse expected = UserFactory.updatedResponseSameEmail();
@@ -185,7 +186,7 @@ class UserServiceTest {
                 .thenReturn(user);
 
         // When
-        UserResponse response = service.updateMe(request);
+        UserResponse response = service.updateAuthenticated(request);
 
         // Then
         UserResponse expected = UserFactory.updatedResponseSameEmail();
@@ -210,7 +211,7 @@ class UserServiceTest {
 
         // When / Then
         assertThrows(ResponseStatusException.class,
-                () -> service.updateMe(request));
+                () -> service.updateAuthenticated(request));
 
         verify(authorizationService).getAuthenticatedUser();
         verify(repository).findByEmail("mariasilva@email.com");
@@ -292,7 +293,7 @@ class UserServiceTest {
                 .thenReturn(user);
 
         // When
-        UserResponse response = service.findMe();
+        UserResponse response = service.findAuthenticated();
 
         // Then
         UserResponse expected = UserFactory.response();
@@ -310,7 +311,7 @@ class UserServiceTest {
                 .thenReturn(Optional.of(user));
 
         // When
-        service.delete(1L);
+        service.deleteUser(1L);
 
         // Then
         verify(repository).findById(1L);
@@ -326,7 +327,7 @@ class UserServiceTest {
 
         // When / Then
         assertThrows(ResponseStatusException.class,
-                () -> service.delete(1L));
+                () -> service.deleteUser(1L));
 
         verify(repository).findById(1L);
         verify(repository, never()).delete(any());
@@ -341,7 +342,7 @@ class UserServiceTest {
                 .thenReturn(user);
 
         // When
-        service.deleteMe();
+        service.deleteAuthenticated();
 
         // Then
         verify(authorizationService).getAuthenticatedUser();
@@ -368,7 +369,7 @@ class UserServiceTest {
                 .thenReturn(user);
 
         // When
-        service.updatePassword(request);
+        service.updateAuthenticatedPassword(request);
 
         // Then
         assertEquals("new-hashed-password", user.getPassword());
@@ -394,7 +395,7 @@ class UserServiceTest {
 
         // When / Then
         assertThrows(ResponseStatusException.class,
-                () -> service.updatePassword(request));
+                () -> service.updateAuthenticatedPassword(request));
 
         verify(authorizationService).getAuthenticatedUser();
         verify(passwordEncoder).matches("wrong-password", "123456");
@@ -418,7 +419,7 @@ class UserServiceTest {
                 .thenReturn(user);
 
         // When
-        UserResponse response = service.toggleRole(1L);
+        UserResponse response = service.toggleUserRole(1L);
 
         // Then
         assertEquals(UserRole.ADMIN, user.getRole());
@@ -448,7 +449,7 @@ class UserServiceTest {
                 .thenReturn(targetAdmin);
 
         // When
-        UserResponse response = service.toggleRole(3L);
+        UserResponse response = service.toggleUserRole(3L);
 
         // Then
         assertEquals(UserRole.USER, targetAdmin.getRole());
@@ -473,7 +474,7 @@ class UserServiceTest {
 
         // When / Then
         assertThrows(ResponseStatusException.class,
-                () -> service.toggleRole(admin.getId()));
+                () -> service.toggleUserRole(admin.getId()));
 
         verify(authorizationService).validateAdmin();
         verify(authorizationService).getAuthenticatedUser();
@@ -494,7 +495,7 @@ class UserServiceTest {
 
         // When / Then
         assertThrows(ResponseStatusException.class,
-                () -> service.toggleRole(999L));
+                () -> service.toggleUserRole(999L));
         verify(authorizationService).validateAdmin();
         verify(authorizationService).getAuthenticatedUser();
         verify(repository).findById(999L);
