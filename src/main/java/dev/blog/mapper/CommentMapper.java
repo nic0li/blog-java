@@ -1,7 +1,6 @@
 package dev.blog.mapper;
 
 import dev.blog.dto.comment.*;
-import dev.blog.dto.post.PostResponse;
 import dev.blog.entity.Comment;
 import org.springframework.util.StringUtils;
 
@@ -27,26 +26,21 @@ public final class CommentMapper {
         return toResponse(comment, true);
     }
 
-    public static CommentResponse toResponseWithoutPost(Comment comment) {
-        return toResponse(comment, false);
-    }
-
-    public static List<CommentResponse> toListResponseWithoutPost(List<Comment> comments) {
+    public static List<CommentResponse> toListResponse(List<Comment> comments) {
         return comments.stream()
-                .map(CommentMapper::toResponseWithoutPost)
+                .map(comment -> toResponse(comment, false))
                 .toList();
     }
 
     private static CommentResponse toResponse(Comment comment, boolean includePost) {
-        PostResponse post = includePost
-                ? PostMapper.toResponseWithoutComments(comment.getPost())
-                : null;
         return new CommentResponse(comment.getId(),
                 comment.getContent(),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt(),
                 UserMapper.toProfileResponse(comment.getUser()),
-                post);
+                includePost
+                        ? PostMapper.toResponseWithoutComments(comment.getPost())
+                        : null);
     }
 
 }

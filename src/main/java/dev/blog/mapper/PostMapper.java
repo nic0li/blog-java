@@ -28,7 +28,7 @@ public final class PostMapper {
     }
 
     public static PostResponse toResponse(Post post) {
-        return toResponse(post, CommentMapper.toListResponseWithoutPost(post.getComments()));
+        return toResponse(post, CommentMapper.toListResponse(post.getComments()));
     }
 
     public static PostResponse toResponseWithoutComments(Post post) {

@@ -39,7 +39,7 @@ class CommentServiceTest {
     @Test
     void shouldCreateCommentSuccessfully() {
         // Given
-        CommentRequest request = CommentFactory.request();
+        CommentRequest request = CommentFactory.request("Great post!");
         Comment comment = CommentFactory.comment();
         Post post = PostFactory.post();
 
@@ -65,20 +65,42 @@ class CommentServiceTest {
     @Test
     void shouldUpdateCommentSuccessfully() {
         // Given
-        CommentRequest request = CommentFactory.updateRequest();
+        CommentRequest request = CommentFactory.request("Updated comment!");
         Comment comment = CommentFactory.comment();
-        Comment updatedComment = CommentFactory.updatedComment();
 
         when(repository.findById(1L))
                 .thenReturn(Optional.of(comment));
         when(repository.save(comment))
-                .thenReturn(updatedComment);
+                .thenReturn(comment);
 
         // When
         CommentResponse response = service.update(1L, request);
 
         // Then
-        CommentResponse expected = CommentFactory.updatedResponse();
+        CommentResponse expected = CommentFactory.response("Updated comment!");
+        assertEquals(expected, response);
+
+        verify(repository).findById(1L);
+        verify(authorizationService).validateOwner(comment.getUser());
+        verify(repository).save(comment);
+    }
+
+    @Test
+    void shouldUpdateCommentWithNullContent() {
+        // Given
+        CommentRequest request = CommentFactory.request(null);
+        Comment comment = CommentFactory.comment();
+
+        when(repository.findById(1L))
+                .thenReturn(Optional.of(comment));
+        when(repository.save(comment))
+                .thenReturn(comment);
+
+        // When
+        CommentResponse response = service.update(1L, request);
+
+        // Then
+        CommentResponse expected = CommentFactory.response();
         assertEquals(expected, response);
 
         verify(repository).findById(1L);

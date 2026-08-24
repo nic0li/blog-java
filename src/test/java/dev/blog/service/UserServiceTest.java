@@ -295,7 +295,7 @@ class UserServiceTest {
     @Test
     void shouldUpdateAuthenticatedUserSuccessfully() {
         // Given
-        UserUpdateRequest request = UserFactory.updateRequest();
+        UserUpdateRequest request = UserFactory.updateRequest("mariasilva@email.com");
         User user = UserFactory.user();
 
         when(authorizationService.getAuthenticatedUser())
@@ -320,7 +320,7 @@ class UserServiceTest {
     @Test
     void shouldUpdateAuthenticatedUserWithNullEmail() {
         // Given
-        UserUpdateRequest request = UserFactory.updateRequestNullEmail();
+        UserUpdateRequest request = UserFactory.updateRequest(null);
         User user = UserFactory.user();
 
         when(authorizationService.getAuthenticatedUser())
@@ -343,7 +343,7 @@ class UserServiceTest {
     @Test
     void shouldUpdateAuthenticatedUserWithSameEmail() {
         // Given
-        UserUpdateRequest request = UserFactory.updateRequestSameEmail();
+        UserUpdateRequest request = UserFactory.updateRequest("maria@email.com");
         User user = UserFactory.user();
 
         when(authorizationService.getAuthenticatedUser())
@@ -368,7 +368,7 @@ class UserServiceTest {
     @Test
     void shouldUpdateAuthenticatedUserWithEmailEmpty() {
         // Given
-        UserUpdateRequest request = UserFactory.updateRequestEmailEmpty();
+        UserUpdateRequest request = UserFactory.updateRequest("");
         User user = UserFactory.user();
 
         when(authorizationService.getAuthenticatedUser())
@@ -391,7 +391,7 @@ class UserServiceTest {
     @Test
     void shouldUpdateAuthenticatedUserWithoutEmailField() {
         // Given
-        UserUpdateRequest request = UserFactory.updateRequestWithoutEmail();
+        UserUpdateRequest request = UserFactory.updateRequest();
         User user = UserFactory.user();
 
         when(authorizationService.getAuthenticatedUser())
@@ -412,15 +412,61 @@ class UserServiceTest {
     }
 
     @Test
+    void shouldUpdateAuthenticatedUserWithBlankNamePhotoAndBio() {
+        // Given
+        UserUpdateRequest request = UserFactory.updateRequestWithBlankFields();
+        User user = UserFactory.user();
+
+        when(authorizationService.getAuthenticatedUser())
+                .thenReturn(user);
+        when(repository.save(user))
+                .thenReturn(user);
+
+        // When
+        UserResponse response = service.updateAuthenticated(request);
+
+        // Then
+        UserResponse expected = UserFactory.updatedResponseWithBlankFields();
+        assertEquals(expected, response);
+
+        verify(authorizationService).getAuthenticatedUser();
+        verify(repository, never()).findByEmail(any());
+        verify(repository).save(user);
+    }
+
+    @Test
+    void shouldUpdateAuthenticatedUserWithNullNamePhotoAndBio() {
+        // Given
+        UserUpdateRequest request = UserFactory.updateRequestWithNullFields();
+        User user = UserFactory.user();
+
+        when(authorizationService.getAuthenticatedUser())
+                .thenReturn(user);
+        when(repository.save(user))
+                .thenReturn(user);
+
+        // When
+        UserResponse response = service.updateAuthenticated(request);
+
+        // Then
+        UserResponse expected = UserFactory.updatedResponseWithNullFields();
+        assertEquals(expected, response);
+
+        verify(authorizationService).getAuthenticatedUser();
+        verify(repository).findByEmail(any());
+        verify(repository).save(user);
+    }
+
+    @Test
     void shouldThrowExceptionWhenUpdatingAuthenticatedUserWithExistingEmail() {
         // Given
-        UserUpdateRequest request = UserFactory.updateRequest();
+        UserUpdateRequest request = UserFactory.updateRequest("ana@email.com");
         User user = UserFactory.user();
         User admin = UserFactory.admin();
 
         when(authorizationService.getAuthenticatedUser())
                 .thenReturn(user);
-        when(repository.findByEmail("mariasilva@email.com"))
+        when(repository.findByEmail("ana@email.com"))
                 .thenReturn(Optional.of(admin));
 
         // When / Then
@@ -428,7 +474,7 @@ class UserServiceTest {
                 () -> service.updateAuthenticated(request));
 
         verify(authorizationService).getAuthenticatedUser();
-        verify(repository).findByEmail("mariasilva@email.com");
+        verify(repository).findByEmail("ana@email.com");
         verify(repository, never()).save(any());
     }
 
