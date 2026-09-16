@@ -6,6 +6,7 @@ import dev.blog.service.interfaces.AuthenticationService;
 import dev.blog.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +36,7 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<UserResponse> register(
-            @RequestBody UserCreateRequest request) {
+            @Valid @RequestBody UserCreateRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(userService.create(request));
     }

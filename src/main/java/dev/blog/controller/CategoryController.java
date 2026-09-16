@@ -4,6 +4,7 @@ import dev.blog.dto.category.*;
 import dev.blog.service.interfaces.CategoryService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,7 @@ public class CategoryController {
 
     @PostMapping
     public ResponseEntity<CategoryResponse> create(
-            @RequestBody CategoryRequest request) {
+            @Valid @RequestBody CategoryRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(service.create(request));
     }
@@ -44,7 +45,7 @@ public class CategoryController {
     @PatchMapping("/{id}")
     public ResponseEntity<CategoryResponse> update(
             @PathVariable Long id,
-            @RequestBody CategoryRequest request) {
+            @Valid @RequestBody CategoryRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(service.update(id, request));
     }

@@ -4,6 +4,7 @@ import dev.blog.dto.comment.*;
 import dev.blog.service.interfaces.CommentService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class CommentController {
     @PatchMapping("/{id}")
     public ResponseEntity<CommentResponse> update(
             @PathVariable Long id,
-            @RequestBody CommentRequest request) {
+            @Valid @RequestBody CommentRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(service.update(id, request));
     }

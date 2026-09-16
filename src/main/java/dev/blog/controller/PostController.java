@@ -7,6 +7,7 @@ import dev.blog.service.interfaces.CommentService;
 import dev.blog.service.interfaces.PostService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,7 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<PostResponse> create(
-            @RequestBody PostRequest request) {
+            @Valid @RequestBody PostRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(service.create(request));
     }
@@ -52,7 +53,7 @@ public class PostController {
     @PatchMapping("/{id}")
     public ResponseEntity<PostResponse> update(
             @PathVariable Long id,
-            @RequestBody PostRequest request) {
+            @Valid @RequestBody PostRequest request) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(service.update(id, request));
     }
@@ -66,7 +67,7 @@ public class PostController {
     @PostMapping("/{id}/comments")
     public ResponseEntity<CommentResponse> createComment(
             @PathVariable Long id,
-            @RequestBody CommentRequest request) {
+            @Valid @RequestBody CommentRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(commentService.create(id, request));
     }

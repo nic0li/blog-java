@@ -44,7 +44,7 @@ public class AuthenticatedUserController {
 
     @PatchMapping("/password")
     public ResponseEntity<Void> updateAuthenticatedPassword(
-            @RequestBody UserPasswordUpdateRequest request) {
+            @Valid @RequestBody UserPasswordUpdateRequest request) {
 
         service.updateAuthenticatedPassword(request);
         return ResponseEntity.noContent().build();
